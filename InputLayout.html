@@ -74,14 +74,14 @@
         }});
     }
 
-        function tgame()
+        function Game()
     {
         this.hscore=0;
         this.ascore=0;
         this.matchid=1;
         this.roundid=0;
         this.setid=0;
-        this.addmatchEvent=function(eventType,winside)
+        this.addMatchEvent=function(eventType,winside)
         {
 
             this.roundid+=1;
@@ -105,14 +105,14 @@
         }
 
     }
-    var game=new tgame();
-
+    var game=new Game();
+    var isInit=undefined;
     $(document).ready(function() {
 
-        if (init===undefined)
+        if (isInit===undefined)
         {
             refresh();
-            var init=1;
+            var isInit=1;
         }
 
         $("form#hAceForm").submit(function ()
