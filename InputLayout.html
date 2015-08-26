@@ -37,7 +37,7 @@
     var db = $.webdb();
     var con = db.connect({
         shortName : "statDB",
-        version : "1.1",
+        version : "1.0",
         displayName : "Volley statistic DB"
     });
     function alrt (str,type) {
@@ -73,29 +73,7 @@
             alert("Error in table Rounds creation!");
         }});
     }
-    function addMatchEvent(eventType,winside)
-    {
 
-        this.roundid+=1;
-        if (winside==1){this.hscore+=1;}
-        if (winside==2){this.ascore+=1;}
-
-
-        var vv, qq = '';
-            qq = "INSERT INTO rounds (match_id,set_id,round_id,hscore,ascore,eventtype,winside) VALUES (?,?,?,?,?,?,?)";
-            vv = [this.matchid,this.setid,this.roundid,this.hscore,this.ascore,eventType,winside];
-            con.run({
-                query: qq,
-                values: vv,
-                onSuccess: function (t, r) {
-                    refresh();
-                    alrt("Round Added!");
-                },
-                onError: function (t, err) {
-                    console.log("Error!");
-                }
-            });
-    }
         function tgame()
     {
         this.hscore=0;
@@ -103,17 +81,40 @@
         this.matchid=1;
         this.roundid=0;
         this.setid=0;
-        this.addmatchEvent=addMatchEvent;
+        this.addmatchEvent=function(eventType,winside)
+        {
+
+            this.roundid+=1;
+            if (winside===1){this.hscore+=1;}
+            if (winside===2){this.ascore+=1;}
+
+
+            var vv, qq = '';
+            qq = "INSERT INTO rounds (match_id,set_id,round_id,hscore,ascore,eventtype,winside) VALUES (?,?,?,?,?,?,?)";
+            vv = [this.matchid,this.setid,this.roundid,this.hscore,this.ascore,eventType,winside];
+            con.run({
+                query: qq,
+                values: vv,
+                onSuccess: function (t, r) {
+                    alert("Round Added!");
+                },
+                onError: function (t, err) {
+                    console.log("Error!");
+                }
+            });
+        }
 
     }
+    var game=new tgame();
+
     $(document).ready(function() {
-        var int=0;
-        if (init==0)
+
+        if (init===undefined)
         {
             refresh();
-            init=1;
+            var init=1;
         }
-        game=new tgame();
+
         $("form#hAceForm").submit(function ()
         {
             game.addMatchEvent(1, 1);
