@@ -1,0 +1,133 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<p><a href="index.html">HOME</a></p>
+
+<div class="label">Home</div>
+<div class="clickable"></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script src="js/webdb.jquery.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+
+<script>
+    var db = $.webdb();
+    var con = db.connect({
+        shortName : "statDB",
+        version : "1.1",
+        displayName : "Volley statistic DB"
+    });
+    function alrt (str,type) {
+        $("#info").css({opacity:1}).html("<p class='alert alert-"+type+"' style='text-align:center;font-weight:bold;'>"+str+"</p>").show().animate({opacity:0},3000,function(){
+            $(this).hide();
+        });
+    }
+    function refresh () {
+    con.run({query:"CREATE TABLE IF NOT EXISTS eventTypes (id   INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name VARCHAR (20) UNIQUE NOT NULL);"
+      ,values:null,
+        onSuccess:function(tx,r) {
+            alrt('Table EventTypes created.');
+        },
+        onError:function(tx,err) {
+            alrt("Error in table EventTypes creation!");
+        }});
+
+    con.run({query:"CREATE  TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL,aTeam VARCHAR (30) NOT NULL,date DATETIME,NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3),LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL);",
+        values:null,
+        onSuccess:function(tx,r) {
+            alert('Table Matches created.');
+        },
+        onError:function(tx,err) {
+            alert("Error in table Matches creation!");
+        }});
+
+    con.run({query:"CREATE TABLE IF NOT EXISTS rounds (id INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, match_id  INTEGER REFERENCES matches (id), set_id INTEGER (1, 0) NOT NULL DEFAULT (0), round_id  INTEGER (4, 0) NOT NULL DEFAULT (0),hscore INTEGER (3, 0) NOT NULL DEFAULT (0),ascore INTEGER (3, 0) NOT NULL DEFAULT (0), eventtype INTEGER (2, 0) REFERENCES eventTypes (id), winside   INTEGER (1, 0) DEFAULT (0) NOT NULL );",
+        values:null,
+        onSuccess:function(tx,r) {
+            alert('Table Rounds created.');
+        },
+        onError:function(tx,err) {
+            alert("Error in table Rounds creation!");
+        }});
+    }
+    function addMatchEvent(eventType,winside)
+    {
+
+        this.roundid+=1;
+        if (winside==1){this.hscore+=1;}
+        if (winside==2){this.ascore+=1;}
+
+
+        var vv, qq = '';
+            qq = "INSERT INTO rounds (match_id,set_id,round_id,hscore,ascore,eventtype,winside) VALUES (?,?,?,?,?,?,?)";
+            vv = [this.matchid,this.setid,this.roundid,this.hscore,this.ascore,eventType,winside];
+            con.run({
+                query: qq,
+                values: vv,
+                onSuccess: function (t, r) {
+                    refresh();
+                    alrt("Round Added!");
+                },
+                onError: function (t, err) {
+                    console.log("Error!");
+                }
+            });
+    }
+        function tgame()
+    {
+        this.hscore=0;
+        this.ascore=0;
+        this.matchid=1;
+        this.roundid=0;
+        this.setid=0;
+        this.addmatchEvent=addMatchEvent;
+
+    }
+    $(document).ready(function() {
+        var int=0;
+        if (init==0)
+        {
+            refresh();
+            init=1;
+        }
+        game=new tgame();
+        $("form#hAceForm").submit(function ()
+        {
+            game.addMatchEvent(1, 1);
+        });
+
+
+    });
+</script>
+
+
+<form id="hAceForm">
+    <br/>
+    <input type="submit" class="btn btn-success btn-large span12" value="HAce" id="sub"/>
+</form>
+
+</body>
+</html>
