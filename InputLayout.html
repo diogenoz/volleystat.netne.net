@@ -10,24 +10,24 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
 
-
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
     <script src="js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
-<body>
+<div>
 <!--[if lt IE 8]>
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 <![endif]-->
 
 <!-- Add your site or application content here -->
-<p><a href="index.html">HOME</a></p>
 
-<div class="label">Home</div>
-<div class="clickable"></div>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
+<script src="js/bootstrap.js"></script>
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/jquery-ui.js"></script>
 <script src="js/webdb.jquery.js"></script>
 <script src="js/plugins.js"></script>
 <script src="js/main.js"></script>
@@ -45,7 +45,7 @@
             $(this).hide();
         });
     }
-    function refresh () {
+    function initDB () {
     con.run({query:"CREATE TABLE IF NOT EXISTS eventTypes (id   INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name VARCHAR (20) UNIQUE NOT NULL);"
       ,values:null,
         onSuccess:function(tx,r) {
@@ -73,14 +73,21 @@
             alert("Error in table Rounds creation!");
         }});
     }
-
+    function Match()
+    {
+        this.id=1;
+        this.NumberOfSets=3;
+        this.hSet=0;
+        this.aSet=0;
+        this.hTeam='';
+    }
         function Game()
     {
         this.hscore=0;
         this.ascore=0;
-        this.matchid=1;
-        this.roundid=0;
-        this.setid=0;
+        this.match=new Match();
+        this.currentRound=0;
+        this.currentSet=0;
         this.addMatchEvent=function(eventType,winside)
         {
 
@@ -91,12 +98,13 @@
 
             var vv, qq = '';
             qq = "INSERT INTO rounds (match_id,set_id,round_id,hscore,ascore,eventtype,winside) VALUES (?,?,?,?,?,?,?)";
-            vv = [this.matchid,this.setid,this.roundid,this.hscore,this.ascore,eventType,winside];
+            vv = [this.matchid,this.currentSet,this.currentRound,this.hscore,this.ascore,eventType,winside];
             con.run({
                 query: qq,
                 values: vv,
                 onSuccess: function (t, r) {
                     alert("Round Added!");
+                    refreshScore();
                 },
                 onError: function (t, err) {
                     console.log("Error!");
@@ -107,28 +115,151 @@
     }
     var game=new Game();
     var isInit=undefined;
+    function refreshScore()
+    {
+        $("#HScoreLabel").text(game.hscore);
+        $("#AScoreLabel").text(game.ascore);
+
+    }
     $(document).ready(function() {
 
         if (isInit===undefined)
         {
-            refresh();
+            initDB();
             var isInit=1;
         }
 
-        $("form#hAceForm").submit(function ()
-        {
-            game.addMatchEvent(1, 1);
-        });
+        $("#HAceButton").click(function (){game.addMatchEvent(1, 1); });
+        $("#AAceButton").click(function (){game.addMatchEvent(1, 2); });
 
+        $("#HErrAceButton").click(function (){game.addMatchEvent(2, 1); });
+        $("#AErrAceButton").click(function (){game.addMatchEvent(2, 2); });
 
+        $("#HBLKButton").click(function (){game.addMatchEvent(3, 1); });
+        $("#ABlkButton").click(function (){game.addMatchEvent(3, 2); });
+
+        $("#HErrAttButton").click(function (){game.addMatchEvent(4, 1); });
+        $("#AErrAttButton").click(function (){game.addMatchEvent(4, 2); });
+
+        $("#HAtt1Button").click(function (){game.addMatchEvent(5, 1); });
+        $("#AAtt1Button").click(function (){game.addMatchEvent(5, 2); });
+
+        $("#HAtt2Button").click(function (){game.addMatchEvent(6, 1); });
+        $("#AAtt2Button").click(function (){game.addMatchEvent(6, 2); });
+
+        $("#HAtt3Button").click(function (){game.addMatchEvent(7, 1); });
+        $("#AAtt3Button").click(function (){game.addMatchEvent(7, 2); });
+
+        $("#HAtt4Button").click(function (){game.addMatchEvent(8, 1); });
+        $("#AAtt4Button").click(function (){game.addMatchEvent(8, 2); });
+
+        $("#HAtt5Button").click(function (){game.addMatchEvent(9, 1); });
+        $("#AAtt5Button").click(function (){game.addMatchEvent(9, 2); });
+
+        $("#HAtt6Button").click(function (){game.addMatchEvent(10, 1); });
+        $("#AAtt6Button").click(function (){game.addMatchEvent(10, 2); });
+
+    });
+
+    $(function() {
+        $( "#tabs" ).tabs();
     });
 </script>
 
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Main</a></li>
+        <li><a href="#tabs-2">Score Table</a></li>
+        <li><a href="#tabs-3">Match log</a></li>
+        <li><a href="#tabs-4">Match statistic</a></li>
 
-<form id="hAceForm">
-    <br/>
-    <input type="submit" class="btn btn-success btn-large span12" value="HAce" id="sub"/>
+    </ul>
+    <div id="tabs-1">
+        <form id="matchForm" action="/">
+
+            <div class="row">
+            <label for="hteam" class="col-md-4">hTeam</label>
+            <input type="text" name="hteam" class="span12 col-md-8" placeholder="Enter HTeam" id="hTeam" required />
+            </div>
+
+            <div class="row">
+            <label for="ateam" class="col-md-4">aTeam</label>
+            <input type="text" name="ateam" class="span12 col-md-8" placeholder="Enter ATeam" id="aTeam" required />
+            </div>
+
+            <div class="row">
+                <label for="numberofsets" class="col-md-4">Number Of Sets</label>
+                <input type="number" name="numberofsets" id="numberofsets" class="span12 col-md-8" value="3" min="1" max="7" step="1" required />
+            </div>
+
+            <div class="row">
+                <label for="lengthofusualset" class="col-md-4">Length of usual set</label>
+                <input type="number" name="lengthofusualset" id="lengthofusualset" class="span12 col-md-8" value="25" min="1" max="50" step="1" required />
+            </div>
+
+            <div class="row">
+                <label for="lengthoflastset" class="col-md-4">Text</label>
+                <input type="number" name="lengthoflastset" id="lengthoflastset" class="span12 col-md-8" value="15" min="1" max="50" step="1" required />
+            </div>
+            <div class="btn btn-success btn-large span12" id="start"><a href="#tabs-2">START</a></div>
 </form>
+    </div>
+    <div id="tabs-2">
+        <div class="row">
+            <div class="btn btn-default col-md-11" id="HTeamLabel">Hteam</div>
+            <div class="btn col-md-2"></div>
+            <div class="btn btn-default col-md-11" id="ATeamLabel">AwayTeam</div>
+        </div>
+        <div class="row">
+            <div class="btn btn-default col-md-6" id="HAceButton">HAce</div>
+            <div class="btn btn-default col-md-5" id="HErrAceButton">HErrAce</div>
+            <div class="btn  col-md-2"></div>
+            <div class="btn btn-default col-md-6" id="AAceButton">AAce</div>
+            <div class="btn btn-default col-md-5" id="AErrAceButton">AErrAce</div>
+        </div>
+        <div class="row">
+            <div class="btn btn-default col-md-6" id="HBlkButton">HBlk</div>
+            <div class="btn btn-default col-md-5" id="HErrAttButton">HErrAtt</div>
+            <div class="btn  col-md-2"></div>
+            <div class="btn btn-default col-md-6" id="ABlkButton">ABlk</div>
+            <div class="btn btn-default col-md-5" id="AErrAttButton">AErrAtt</div>
+        </div>
+        <div class="row">
+            <div class="btn btn-default col-md-11" id="HScoreLabel">0</div>
+            <div class="btn col-md-2" ></div>
+            <div class="btn btn-default col-md-11" id="AScoreLabel">0</div>
+        </div>
+        <div class="row">
+            <div class="btn btn-default col-md-4" id="HAtt4Button">4</div>
+            <div class="btn btn-default col-md-3" id="HAtt3Button">3</div>
+            <div class="btn btn-default col-md-4" id="HAtt2Button">2</div>
+            <div class="btn  col-md-2"></div>
+            <div class="btn btn-default col-md-4" id="AAtt4Button">4</div>
+            <div class="btn btn-default col-md-3" id="AAtt3Button">3</div>
+            <div class="btn btn-default col-md-4" id="AAtt2Button">2</div>
+        </div>
+        <div class="row">
+            <div class="btn btn-default col-md-4" id="HAtt5Button">5</div>
+            <div class="btn btn-default col-md-3" id="HAtt6Button">6</div>
+            <div class="btn btn-default col-md-4" id="HAtt1Button">1</div>
+            <div class="btn  col-md-2"></div>
+            <div class="btn btn-default col-md-4" id="AAtt5Button">5</div>
+            <div class="btn btn-default col-md-3" id="AAtt6Button">6</div>
+            <div class="btn btn-default col-md-4" id="AAtt1Button">1</div>
+        </div>
+    </div>
+    <div id="tabs-3">
+
+    </div>
+    <div id="tabs-4">
+
+    </div>
+
+</div>
+
+
+
+
 
 </body>
 </html>
