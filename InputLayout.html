@@ -190,11 +190,11 @@
         };
         this.isMatchEnded=function()
         {
-            if (this.hSet===Number(this.numberOfSets))
+            if (this.hSet===this.numberOfSets)
             {
                 return true;
             }
-            if(this.aSet===Number(this.numberOfSets))
+            if(this.aSet===this.numberOfSets)
             {
                 return true;
             }
@@ -202,11 +202,13 @@
         };
         this.isLastSet=function()
         {
-            if (this.hSet+this.aSet===Number(this.numberOfSets+1))
+            if (this.hSet+this.aSet===2*(this.numberOfSets-1))
             {
                 return true;
+            } else
+            {
+                return false;
             }
-            return false;
 
         };
         this.isDifferentOn2Points=function()
@@ -332,9 +334,9 @@
         {
             game.hTeam=$("#hTeam").val();
             game.aTeam=$("#aTeam").val();
-            game.numberOfSets=$("#numberOfSets").val();
-            game.lengthOfUsualSet=$("#lengthOfUsualSet").val();
-            game.lengthOfLastSet=$("#lengthOfLastSet").val();
+            game.numberOfSets=Number($("#numberOfSets").val());
+            game.lengthOfUsualSet=Number($("#lengthOfUsualSet").val());
+            game.lengthOfLastSet=Number($("#lengthOfLastSet").val());
 
             $("#HTeamLabel").text(game.hTeam);
             $("#ATeamLabel").text(game.aTeam);
