@@ -174,22 +174,21 @@
         }
         this.endSet=function(winside)
         {
-
             this.hscore=0;
             this.ascore=0;
             this.currentRound=0;
-
-            if (winside===1){this.hSet+=1;}
-            if (winside===2){this.aSet+=1;}
-
             if (this.isMatchEnded()===true)
             {
                 this.endMatch();
             }
+            if (winside===1){this.hSet+=1;}
+            if (winside===2){this.aSet+=1;}
+
+
         }
         this.isMatchEnded=function()
         {
-            if (this.hSet===this.numberOfSets||this.aSet=== this.numberOfSets)
+            if (this.isLastSet()===true&&this.isSetEnded()===true)
             {
                 return true;
             }
@@ -201,29 +200,18 @@
             {
                 return true;
             }
+            return false;
 
-
-        }
-        this.isDifferentOn2points=function()
-        {
-            if (Math.abs(this.hscore-this.ascore)>1)
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
         }
         this.isSetEnded= function ()
         {
-
                 if (this.isLastSet()===false)
                 {
-                    if ((this.hscore  >= this.lengthOfUsualSet) && (this.isDifferentOn2points()===true))
+                    if ((this.hscore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
                     {
                         return true;
                     }
-                    if ((this.ascore  >= this.lengthOfUsualSet) && (this.isDifferentOn2points()===true))
+                    if ((this.ascore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
                     {
                         return true;
                     }
@@ -231,11 +219,11 @@
                 }
                 if (this.isLastSet()===true)
                 {
-                    if ((this.hscore  >= this.lengthOfLastSet) && (this.isDifferentOn2points()===true))
+                    if ((this.hscore  >= this.lengthOfLastSet) && (Math.abs(this.hscore-this.ascore)>1))
                     {
                         return true;
                     }
-                    if ((this.ascore  >= this.lengthOfLastSet) && (this.isDifferentOn2points()===true))
+                    if ((this.ascore  >= this.lengthOfLastSet) && (Math.abs(this.hscore-this.ascore)>1))
                     {
                         return true;
                     }
@@ -347,7 +335,8 @@
     $(function() {
         $( "#tabs" ).tabs();
         $( "#tabs" ).tabs("disable", "#tabs-2");
-
+        $( "#tabs" ).tabs("disable", "#tabs-3");
+        $( "#tabs" ).tabs("disable", "#tabs-4");
 
     });
 </script>
