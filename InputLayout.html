@@ -173,14 +173,22 @@
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 10 creation!");
             }});
+        con.run({query:"CREATE VIEW matchlog AS SELECT r.*,e.name AS eventname FROM matches m, rounds r, eventTypes e WHERE (m.id = r.match_id) AND (e.id = r.eventtype);",
+            values:null,
+            onSuccess:function(tx,r) {
+                alert('view matchlog created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in view matchlog creation!");
+            }});
 
 
     }
     function drawMatchLog()
     {
         con.run({
-            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype);",
-            values:null,
+            query:"SELECT * as eventname FROM matchlog WHERE id=? ORDER BY round_id",
+            values:[game.id],
             onSuccess:function(t,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -239,13 +247,13 @@
         return m_id;
     }
 
-        function Game(m_id)
+        function Game(id)
     {
         this.hTeam='';
         this.aTeam='';
         this.hscore=0;
         this.ascore=0;
-        this.id=1;
+        this.id=id;
         this.numberOfSets=3;
         this.lengthOfUsualSet=25;
         this.lengthOfLastSet=15;
@@ -372,7 +380,7 @@
 
 
     }
-    var m_id=getMatchId();
+    var m_id=getMatchId()+1;
     var game=new Game(m_id);
     var isInit=undefined;
     function refreshScore()
