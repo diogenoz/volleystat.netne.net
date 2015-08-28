@@ -150,7 +150,7 @@
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 10 creation!");
             }});
-        con.run({query:"CREATE VIEW matchlog AS SELECT * FROM matches m,rounds r,eventTypes e WHERE (m.id=r.match_id) AND (e.id = r.eventtype);",
+        con.run({query:"CREATE VIEW IF NOT EXISTS matchlog AS SELECT r.*,m.hTeam,m.aTeam,m.date,e.name as eventname FROM matches m,rounds r,eventTypes e WHERE (m.id=r.match_id) AND (e.id = r.eventtype);",
             values:null,onSuccess:function(tx,r) {
                 alert('view matchlog created.');
             },
@@ -161,7 +161,31 @@
     }
     function drawMatchLog()
     {
-
+        con.run({
+            query:"SELECT * FROM matchlog WHERE matchid=?",
+            values:[game.id],
+            onSuccess:function(t,r) {
+                if (r.rows.length >= 1) {
+                    var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
+                    vals  += '<thead><td>RoundID</td><td>hEvent</td><td>hScore</td><td>aScore</td><td>aEvent</td></thead>';
+                    for (var i = 0; i < r.rows.length; i++) {
+                        var item = r.rows.item(i);
+                        if (Number(item.winside)===1)
+                        {
+                            vals +="<tr><td>"+item.id+"</td><td>"+item.eventname+"</td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td></td></tr>";
+                        }
+                        if (Number(item.winside)===2)
+                        {
+                            vals +="<tr><td>"+item.id+"</td><td></td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td>"+item.eventname+"</td></tr>";
+                        }
+                    };
+                    vals  += '</table>';
+                    $("#matchLog").html(vals);
+                } else $("#matchLog").html("<p id='empty'>There are no enteries to show.</p>");
+            },
+            onError:function(t,err) { $("#matchLog").html("<p id='empty'>There are no enteries to show.</p>");
+                console.log("Error!"); }
+        });
     }
 
         function Game()
@@ -457,7 +481,7 @@
         </div>
     </div>
     <div id="tabs-3">
-        <div id="matchlog"></div>
+        <div id="matchLog"></div>
     </div>
     <div id="tabs-4">
 
