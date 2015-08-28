@@ -162,7 +162,7 @@
     function drawMatchLog()
     {
         con.run({
-            query:"SELECT * FROM matchlog WHERE matchid=?",
+            query:"SELECT * FROM matchlog WHERE match_id=?",
             values:[game.id],
             onSuccess:function(t,r) {
                 if (r.rows.length >= 1) {
@@ -178,7 +178,7 @@
                         {
                             vals +="<tr><td>"+item.id+"</td><td></td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td>"+item.eventname+"</td></tr>";
                         }
-                    };
+                    }
                     vals  += '</table>';
                     $("#matchLog").html(vals);
                 } else $("#matchLog").html("<p id='empty'>There are no enteries to show.</p>");
@@ -207,6 +207,7 @@
         {
             $( "#tabs" ).tabs( "disable", "#tabs-2" );
             $( "#tabs" ).tabs( {active: 2} );
+            drawMatchLog();
         };
         this.endSet=function(winside)
         {
