@@ -55,7 +55,7 @@
             alrt("Error in table EventTypes creation!");
         }});
 
-    con.run({query:"CREATE TABLE matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));",
+    con.run({query:"CREATE TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));",
         values:null,
         onSuccess:function(tx,r) {
             alert('Table Matches created.');
@@ -73,7 +73,7 @@
             alert("Error in table Rounds creation!");
         }});
 
-        con.run({query:"CREATE TABLE MatchStatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
+        con.run({query:"CREATE TABLE IF NOT EXISTS matchstatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
             values:null,
             onSuccess:function(tx,r) {
                 alert('Table MatchStatuses created.');
