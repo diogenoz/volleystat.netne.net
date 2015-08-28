@@ -171,7 +171,7 @@
         this.endMatch=function()
         {
             alert("match ended");
-        }
+        };
         this.endSet=function(winside)
         {
             this.hscore=0;
@@ -185,7 +185,7 @@
             if (winside===2){this.aSet+=1;}
 
 
-        }
+        };
         this.isMatchEnded=function()
         {
             if (this.isLastSet()===true&&this.isSetEnded()===true)
@@ -193,7 +193,7 @@
                 return true;
             }
             return false;
-        }
+        };
         this.isLastSet=function()
         {
             if (this.hSet+this.aSet===this.numberOfSets+1)
@@ -202,7 +202,7 @@
             }
             return false;
 
-        }
+        };
         this.isDifferentOn2Points=function()
         {
             if(Math.abs(this.hscore-this.ascore)>1)
@@ -212,7 +212,7 @@
             {
                 return false;
             }
-        }
+        };
         this.isSetEnded= function ()
         {
                 if (this.isLastSet()===false)
@@ -239,7 +239,7 @@
                     }
                 }
             return false;
-        }
+        };
         this.addMatchEvent=function(eventType,winside)
         {
 
@@ -270,7 +270,7 @@
                 this.endSet(winside);
             }
 
-        }
+        };
 
 
     }
