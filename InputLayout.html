@@ -167,10 +167,74 @@
         this.aSet=0;
         this.currentRound=0;
         this.currentSet=0;
+
+        this.endMatch=function()
+        {
+
+        }
+        this.endSet=function(winside)
+        {
+            this.hscore=0;
+            this.ascore=0;
+            this.roundid=0;
+            if (this.isMatchEnded()===true)
+            {
+                this.endMatch();
+            }
+            if (winside===1){this.hSet+=1;}
+            if (winside===2){this.aSet+=1;}
+
+
+        }
+        this.isMatchEnded=function()
+        {
+            if (this.isLastSet()===true&&this.isSetEnded()===true)
+            {
+                return true;
+            }
+            return false;
+        }
+        this.isLastSet=function()
+        {
+            if (this.hSet+this.aSet===this.numberOfSets-1)
+            {
+                return true;
+            }
+            return false;
+
+        }
+        this.isSetEnded= function ()
+        {
+                if (this.isLastSet()===false)
+                {
+                    if ((this.hscore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    {
+                        return true;
+                    }
+                    if ((this.ascore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1)))
+                    {
+                        return true;
+                    }
+
+                }
+                if (this.isLastSet()===true)
+                {
+                    if ((this.hscore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    {
+                        return true;
+                    }
+                    if ((this.ascore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1)))
+                    {
+                        return true;
+                    }
+                }
+            return false;
+        }
         this.addMatchEvent=function(eventType,winside)
         {
 
             this.roundid+=1;
+
             if (winside===1){this.hscore+=1;}
             if (winside===2){this.ascore+=1;}
 
@@ -189,6 +253,13 @@
                     console.log("Error!");
                 }
             });
+
+
+            if (this.isSetEnded() === true)
+            {
+                this.endSet(winside);
+            }
+
         }
 
 
