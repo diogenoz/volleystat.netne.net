@@ -165,7 +165,7 @@
         this.lengthOfLastSet=15;
         this.hSet=0;
         this.aSet=0;
-        this.currentRound=0;
+        //this.currentRound=0;
         this.currentSet=0;
 
         this.endMatch=function()
@@ -174,13 +174,14 @@
         }
         this.endSet=function(winside)
         {
-            this.hscore=0;
-            this.ascore=0;
-            this.roundid=0;
             if (this.isMatchEnded()===true)
             {
                 this.endMatch();
             }
+            this.hscore=0;
+            this.ascore=0;
+            this.roundid=0;
+
             if (winside===1){this.hSet+=1;}
             if (winside===2){this.aSet+=1;}
 
@@ -241,7 +242,7 @@
 
             var vv, qq = '';
             qq = "INSERT INTO rounds (match_id,set_id,round_id,hscore,ascore,eventtype,winside) VALUES (?,?,?,?,?,?,?)";
-            vv = [this.id,this.currentSet,this.currentRound,this.hscore,this.ascore,eventType,winside];
+            vv = [this.id,this.currentSet,this.roundid,this.hscore,this.ascore,eventType,winside];
             con.run({
                 query: qq,
                 values: vv,
@@ -335,8 +336,7 @@
     $(function() {
         $( "#tabs" ).tabs();
         $( "#tabs" ).tabs("disable", "#tabs-2");
-        $( "#tabs" ).tabs("disable", "#tabs-3");
-        $( "#tabs" ).tabs("disable", "#tabs-4");
+
 
     });
 </script>
