@@ -82,10 +82,10 @@
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (1, 'Эйс');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events created.');
+                alert('insert Events 1 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 0 creation!");
+                alert("Error in insert EventTypes 1 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (2, 'Неподача');",
             values:null,onSuccess:function(tx,r) {
@@ -150,6 +150,17 @@
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 10 creation!");
             }});
+        con.run({query:"CREATE VIEW matchlog AS SELECT * FROM matches m,rounds r,eventTypes e WHERE (m.id=r.match_id) AND (e.id = r.eventtype);",
+            values:null,onSuccess:function(tx,r) {
+                alert('view matchlog created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in view matchlog creation!");
+            }});
+
+    }
+    function drawMatchLog()
+    {
 
     }
 
