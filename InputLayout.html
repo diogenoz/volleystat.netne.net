@@ -75,10 +75,80 @@
 
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');",
             values:null,onSuccess:function(tx,r) {
+                alert('insert Events 0 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 0 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (1, 'Эйс');",
+            values:null,onSuccess:function(tx,r) {
                 alert('insert Events created.');
             },
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 0 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (2, 'Неподача');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 2 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 2 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (3, 'Блок');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 3 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 3 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (4, 'Неатака');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 4 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 4 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (5, 'Атака из 1 зоны');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 5 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 5 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (6, 'Атака из 2 зоны');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 6  created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 6 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (7, 'Первый темп');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 7 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 7 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (8, 'Атака из 4 зоны');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 8 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 8 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (9, 'Атака из 5 зоны');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 9 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 9 creation!");
+            }});
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (10, 'Пайп');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events 10 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 10 creation!");
             }});
 
     }
@@ -107,7 +177,7 @@
 
             var vv, qq = '';
             qq = "INSERT INTO rounds (match_id,set_id,round_id,hscore,ascore,eventtype,winside) VALUES (?,?,?,?,?,?,?)";
-            vv = [this.matchid,this.currentSet,this.currentRound,this.hscore,this.ascore,eventType,winside];
+            vv = [this.id,this.currentSet,this.currentRound,this.hscore,this.ascore,eventType,winside];
             con.run({
                 query: qq,
                 values: vv,
@@ -129,6 +199,8 @@
     {
         $("#HScoreLabel").text(game.hscore);
         $("#AScoreLabel").text(game.ascore);
+        $("#HSetLabel").text(game.hSet);
+        $("#ASetLabel").text(game.aSet);
 
     }
     $(document).ready(function() {
@@ -241,6 +313,11 @@
             <div class="btn btn-default col-md-11" id="HTeamLabel">Hteam</div>
             <div class="btn col-md-2"></div>
             <div class="btn btn-default col-md-11" id="ATeamLabel">AwayTeam</div>
+        </div>
+        <div class="row">
+            <div class="btn btn-default col-md-11" id="HSetLabel">0</div>
+            <div class="btn col-md-2">set</div>
+            <div class="btn btn-default col-md-11" id="ASetLabel">0</div>
         </div>
         <div class="row">
             <div class="btn btn-default col-md-6" id="HAceButton">HAce</div>
