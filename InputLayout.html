@@ -150,20 +150,14 @@
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 10 creation!");
             }});
-        con.run({query:"CREATE VIEW IF NOT EXISTS matchlog AS SELECT r.*,m.hTeam,m.aTeam,m.date,e.name as eventname FROM matches m,rounds r,eventTypes e WHERE (m.id=r.match_id) AND (e.id = r.eventtype);",
-            values:null,onSuccess:function(tx,r) {
-                alert('view matchlog created.');
-            },
-            onError:function(tx,err) {
-                alert("Error in view matchlog creation!");
-            }});
+
 
     }
     function drawMatchLog()
     {
         con.run({
-            query:"SELECT * FROM matchlog WHERE match_id=?",
-            values:[game.id],
+            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype);",
+            values:null,
             onSuccess:function(t,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -172,7 +166,7 @@
                         var item = r.rows.item(i);
                         if (Number(item.winside)===1)
                         {
-                            vals +="<tr><td>"+item.id+"</td><td>"+item.eventname+"</td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td></td></tr>";
+                            vals +="<tr><td>"+item.round_id+"</td><td>"+item.eventname+"</td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td></td></tr>";
                         }
                         if (Number(item.winside)===2)
                         {
@@ -183,7 +177,7 @@
                     $("#matchLog").html(vals);
                 } else $("#matchLog").html("<p id='empty'>There are no enteries to show.</p>");
             },
-            onError:function(t,err) { $("#matchLog").html("<p id='empty'>There are no enteries to show.</p>");
+            onError:function(t,err) { $("#matchLog").html("<p id='empty'>There are error to show.</p>");
                 console.log("Error!"); }
         });
     }
