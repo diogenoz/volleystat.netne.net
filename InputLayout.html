@@ -177,18 +177,19 @@
             this.hscore=0;
             this.ascore=0;
             this.currentRound=0;
+
+            if (winside===1){this.hSet+=1;}
+            if (winside===2){this.aSet+=1;}
+
             if (this.isMatchEnded()===true)
             {
                 this.endMatch();
             }
-            if (winside===1){this.hSet+=1;}
-            if (winside===2){this.aSet+=1;}
-
 
         };
         this.isMatchEnded=function()
         {
-            if (this.isLastSet()===true&&this.isSetEnded()===true)
+            if (this.hSet===this.numberOfSets || this.aSet===this.numberOfSets)
             {
                 return true;
             }
