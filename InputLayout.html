@@ -72,20 +72,29 @@
         onError:function(tx,err) {
             alert("Error in table Rounds creation!");
         }});
+
+        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert Events created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert EventTypes 0 creation!");
+            }});
+
     }
-    function Match()
-    {
-        this.id=1;
-        this.NumberOfSets=3;
-        this.hSet=0;
-        this.aSet=0;
-        this.hTeam='';
-    }
+
         function Game()
     {
+        this.hTeam='';
+        this.aTeam='';
         this.hscore=0;
         this.ascore=0;
-        this.match=new Match();
+        this.id=1;
+        this.numberOfSets=3;
+        this.lengthOfUsualSet=25;
+        this.lengthOfLastSet=15;
+        this.hSet=0;
+        this.aSet=0;
         this.currentRound=0;
         this.currentSet=0;
         this.addMatchEvent=function(eventType,winside)
@@ -111,6 +120,7 @@
                 }
             });
         }
+
 
     }
     var game=new Game();
@@ -159,49 +169,71 @@
         $("#HAtt6Button").click(function (){game.addMatchEvent(10, 1); });
         $("#AAtt6Button").click(function (){game.addMatchEvent(10, 2); });
 
+        $("#start").click(function ()
+        {
+            game.hTeam=$("#hTeam").val();
+            game.aTeam=$("#aTeam").val();
+            game.numberOfSets=$("#numberOfSets").val();
+            game.lengthOfUsualSet=$("#lengthOfUsualSet").val();
+            game.lengthOfLastSet=$("#lengthOfLastSet").val();
+
+            $("#HTeamLabel").text(game.hTeam);
+            $("#ATeamLabel").text(game.aTeam);
+
+
+            $( "#tabs" ).tabs( "disable", "#tabs-1" );
+            $( "#tabs" ).tabs("enable", "#tabs-2");
+            $( "#tabs" ).tabs( {active: 1} );
+            $( "#tabs" ).tabs( "refresh" );
+
+        });
     });
 
     $(function() {
         $( "#tabs" ).tabs();
+        $( "#tabs" ).tabs("disable", "#tabs-2");
+        $( "#tabs" ).tabs("disable", "#tabs-3");
+        $( "#tabs" ).tabs("disable", "#tabs-4");
+
     });
 </script>
 
 <div id="tabs">
     <ul>
-        <li><a href="#tabs-1">Main</a></li>
+        <li><a href="#tabs-1">Home</a></li>
         <li><a href="#tabs-2">Score Table</a></li>
         <li><a href="#tabs-3">Match log</a></li>
         <li><a href="#tabs-4">Match statistic</a></li>
 
     </ul>
     <div id="tabs-1">
-        <form id="matchForm" action="/">
+        <form id="matchForm" action="#tabs-2">
 
             <div class="row">
             <label for="hteam" class="col-md-4">hTeam</label>
-            <input type="text" name="hteam" class="span12 col-md-8" placeholder="Enter HTeam" id="hTeam" required />
+            <input type="text" name="hteam" class="span12 col-md-4" placeholder="Enter HTeam" id="hTeam" required />
             </div>
 
             <div class="row">
             <label for="ateam" class="col-md-4">aTeam</label>
-            <input type="text" name="ateam" class="span12 col-md-8" placeholder="Enter ATeam" id="aTeam" required />
+            <input type="text" name="ateam" class="span12 col-md-4" placeholder="Enter ATeam" id="aTeam" required />
             </div>
 
             <div class="row">
-                <label for="numberofsets" class="col-md-4">Number Of Sets</label>
-                <input type="number" name="numberofsets" id="numberofsets" class="span12 col-md-8" value="3" min="1" max="7" step="1" required />
+                <label for="numberOfSets" class="col-md-4">Number Of Sets</label>
+                <input type="number" name="numberOfSets" id="numberOfSets" class="span12 col-md-4" value="3" min="1" max="7" step="1" required />
             </div>
 
             <div class="row">
-                <label for="lengthofusualset" class="col-md-4">Length of usual set</label>
-                <input type="number" name="lengthofusualset" id="lengthofusualset" class="span12 col-md-8" value="25" min="1" max="50" step="1" required />
+                <label for="lengthOfUsualSet" class="col-md-4">Length of usual set</label>
+                <input type="number" name="lengthOfUsualSet" id="lengthOfUsualSet" class="span12 col-md-4" value="25" min="1" max="50" step="1" required />
             </div>
 
             <div class="row">
-                <label for="lengthoflastset" class="col-md-4">Text</label>
-                <input type="number" name="lengthoflastset" id="lengthoflastset" class="span12 col-md-8" value="15" min="1" max="50" step="1" required />
+                <label for="lengthOfLastSet" class="col-md-4">Text</label>
+                <input type="number" name="lengthOfLastSet" id="lengthOfLastSet" class="span12 col-md-4" value="15" min="1" max="50" step="1" required />
             </div>
-            <div class="btn btn-success btn-large span12" id="start"><a href="#tabs-2">START</a></div>
+            <input type="button" class="btn btn-success btn-large span12" id="start" name="start" value="START" />
 </form>
     </div>
     <div id="tabs-2">
@@ -249,7 +281,7 @@
         </div>
     </div>
     <div id="tabs-3">
-
+        <div id="matchlog"></div>
     </div>
     <div id="tabs-4">
 
