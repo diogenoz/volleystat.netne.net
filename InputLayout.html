@@ -203,15 +203,25 @@
             return false;
 
         }
+        this.isDifferentOn2Points=function()
+        {
+            if(Math.abs(this.hscore-this.ascore)>1))
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
         this.isSetEnded= function ()
         {
                 if (this.isLastSet()===false)
                 {
-                    if ((this.hscore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    if ((this.hscore  >= this.lengthOfUsualSet) && (this.isDifferentOn2Points()===true))
                     {
                         return true;
                     }
-                    if ((this.ascore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    if ((this.ascore  >= this.lengthOfUsualSet) && (this.isDifferentOn2Points()===true))
                     {
                         return true;
                     }
@@ -219,11 +229,11 @@
                 }
                 if (this.isLastSet()===true)
                 {
-                    if ((this.hscore  >= this.lengthOfLastSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    if ((this.hscore  >= this.lengthOfLastSet) && (this.isDifferentOn2Points()===true))
                     {
                         return true;
                     }
-                    if ((this.ascore  >= this.lengthOfLastSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    if ((this.ascore  >= this.lengthOfLastSet) && (this.isDifferentOn2Points()===true))
                     {
                         return true;
                     }
