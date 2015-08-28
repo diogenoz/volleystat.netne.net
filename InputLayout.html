@@ -170,7 +170,8 @@
 
         this.endMatch=function()
         {
-            alert("match ended");
+            $( "#tabs" ).tabs( "disable", "#tabs-2" );
+            $( "#tabs" ).tabs( {active: 2} );
         };
         this.endSet=function(winside)
         {
@@ -189,15 +190,19 @@
         };
         this.isMatchEnded=function()
         {
-            if (this.hSet===this.numberOfSets || this.aSet===this.numberOfSets)
+            if (this.hSet===Number(this.numberOfSets))
             {
                 return true;
             }
-            return false;
+            if(this.aSet===Number(this.numberOfSets))
+            {
+                return true;
+            }
+
         };
         this.isLastSet=function()
         {
-            if (this.hSet+this.aSet===this.numberOfSets+1)
+            if (this.hSet+this.aSet===Number(this.numberOfSets+1))
             {
                 return true;
             }
