@@ -55,7 +55,7 @@
             alrt("Error in table EventTypes creation!");
         }});
 
-    con.run({query:"CREATE  TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL,aTeam VARCHAR (30) NOT NULL,date DATETIME,NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3),LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL);",
+    con.run({query:"CREATE TABLE matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));",
         values:null,
         onSuccess:function(tx,r) {
             alert('Table Matches created.');
@@ -72,6 +72,29 @@
         onError:function(tx,err) {
             alert("Error in table Rounds creation!");
         }});
+
+        con.run({query:"CREATE TABLE MatchStatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
+            values:null,
+            onSuccess:function(tx,r) {
+                alert('Table MatchStatuses created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in table MatchStatuses creation!");
+            }});
+        con.run({query:"INSERT INTO MatchStatuses (id, Name) VALUES (0, 'Начат');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert MatchStatuses 0 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert MatchStatuses 0 creation!");
+            }});
+        con.run({query:"INSERT INTO MatchStatuses (id, Name) VALUES (1, 'Завершен');",
+            values:null,onSuccess:function(tx,r) {
+                alert('insert MatchStatuses 1 created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in MatchStatuses EventTypes 1 creation!");
+            }});
 
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');",
             values:null,onSuccess:function(tx,r) {
@@ -181,8 +204,42 @@
                 console.log("Error!"); }
         });
     }
+    function saveMatchSettings()
+    {
+        con.run({query:"INSERT INTO matches (id,hTeam, aTeam, date, NumberOfSets, LengthOfUsualSet, LengthOfLastSet, hSet, aSet, currentSet, currentRound, status) VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+            values:[game.id,game.hTeam,game.aTeam,game.matchdate,game.numberOfSets,game.lengthOfUsualSet,game.lengthOfLastSet,game.hSet,game.aTeam,game.currentSet,game.currentRound,game.status],
+            onSuccess:function(tx,r) {
+                alert('insert matchsettings created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in insert matchsettings creation!");
+            }});
+    }
+    function updateMatchSettings()
+    {
+        con.run({query:"UPDATE matches SET hTeam=?, aTeam=?, date=?, NumberOfSets=?, LengthOfUsualSet=?, LengthOfLastSet=?, hSet=?, aSet=?, currentSet=?, currentRound=?, status=?) WHERE id=?;",
+            values:[game.hTeam,game.aTeam,game.matchdate,game.numberOfSets,game.lengthOfUsualSet,game.lengthOfLastSet,game.hSet,game.aTeam,game.currentSet,game.currentRound,game.status,game.id],
+            onSuccess:function(tx,r) {
+                alert('update matchsettings created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in update matchsettings creation!");
+            }});
+    }
+    function getMatchId()
+    {
+        con.run({
+            query:"SELECT MAX(id) FROM matches",
+            values:null,
+            onSuccess:function(t,r) {
+                var m_id=Number(r.rows.item(0));
+            },
+            onError:null
+        });
+        return m_id;
+    }
 
-        function Game()
+        function Game(m_id)
     {
         this.hTeam='';
         this.aTeam='';
@@ -196,11 +253,14 @@
         this.aSet=0;
         this.currentRound=0;
         this.currentSet=0;
+        this.status=0;
+        this.matchdate=new Date();
 
         this.endMatch=function()
         {
             $( "#tabs" ).tabs( "disable", "#tabs-2" );
             $( "#tabs" ).tabs( {active: 2} );
+            game.status=1;
             drawMatchLog();
         };
         this.endSet=function(winside)
@@ -312,7 +372,8 @@
 
 
     }
-    var game=new Game();
+    var m_id=getMatchId();
+    var game=new Game(m_id);
     var isInit=undefined;
     function refreshScore()
     {
@@ -376,6 +437,7 @@
             $( "#tabs" ).tabs("enable", "#tabs-2");
             $( "#tabs" ).tabs( {active: 1} );
             $( "#tabs" ).tabs( "refresh" );
+            saveMatchSettings();
 
         });
     });
@@ -393,7 +455,7 @@
         <li><a href="#tabs-1">Home</a></li>
         <li><a href="#tabs-2">Score Table</a></li>
         <li><a href="#tabs-3">Match log</a></li>
-        <li><a href="#tabs-4">Match statistic</a></li>
+        <li><a href="#tabs-4">Match Report</a></li>
 
     </ul>
     <div id="tabs-1">
