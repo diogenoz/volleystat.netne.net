@@ -170,7 +170,7 @@
 
         this.endMatch=function()
         {
-
+            alert("match ended");
         }
         this.endSet=function(winside)
         {
@@ -219,11 +219,11 @@
                 }
                 if (this.isLastSet()===true)
                 {
-                    if ((this.hscore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    if ((this.hscore  >= this.lengthOfLastSet) && (Math.abs(this.hscore-this.ascore)>1))
                     {
                         return true;
                     }
-                    if ((this.ascore  >= this.lengthOfUsualSet) && (Math.abs(this.hscore-this.ascore)>1))
+                    if ((this.ascore  >= this.lengthOfLastSet) && (Math.abs(this.hscore-this.ascore)>1))
                     {
                         return true;
                     }
@@ -288,7 +288,7 @@
         $("#HErrAceButton").click(function (){game.addMatchEvent(2, 1); });
         $("#AErrAceButton").click(function (){game.addMatchEvent(2, 2); });
 
-        $("#HBLKButton").click(function (){game.addMatchEvent(3, 1); });
+        $("#HBlkButton").click(function (){game.addMatchEvent(3, 1); });
         $("#ABlkButton").click(function (){game.addMatchEvent(3, 2); });
 
         $("#HErrAttButton").click(function (){game.addMatchEvent(4, 1); });
