@@ -173,7 +173,15 @@
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 10 creation!");
             }});
-        con.run({query:"CREATE VIEW matchlog AS SELECT r.*,e.name AS eventname FROM matches m, rounds r, eventTypes e WHERE (m.id = r.match_id) AND (e.id = r.eventtype);",
+        con.run({query:"DROP view matchlog;",
+            values:null,
+            onSuccess:function(tx,r) {
+                alert('view matchlog dropped.');
+            },
+            onError:function(tx,err) {
+                alert("Error in view matchlog drop!");
+            }});
+        con.run({query:"CREATE VIEW IF NOT EXISTS  matchlog AS SELECT r.*,e.name AS eventname FROM matches m, rounds r, eventTypes e WHERE (m.id = r.match_id) AND (e.id = r.eventtype);",
             values:null,
             onSuccess:function(tx,r) {
                 alert('view matchlog created.');
@@ -187,7 +195,7 @@
     function drawMatchLog()
     {
         con.run({
-            query:"SELECT * as eventname FROM matchlog WHERE id=? ORDER BY round_id",
+            query:"SELECT * FROM matchlog WHERE id=? ORDER BY round_id",
             values:[game.id],
             onSuccess:function(t,r) {
                 if (r.rows.length >= 1) {
@@ -236,15 +244,16 @@
     }
     function getMatchId()
     {
+        var v_mid=0;
         con.run({
-            query:"SELECT MAX(id) FROM matches",
+            query:"SELECT MAX(id) as mid FROM matches;",
             values:null,
             onSuccess:function(t,r) {
-                var m_id=Number(r.rows.item(0));
+                v_mid=Number(r.rows.item(0).mid);
             },
-            onError:null
+            onError:function(tx,err){alert("getID error");}
         });
-        return m_id;
+        return v_mid;
     }
 
         function Game(id)
@@ -253,7 +262,7 @@
         this.aTeam='';
         this.hscore=0;
         this.ascore=0;
-        this.id=id;
+        this.id=Number(id);
         this.numberOfSets=3;
         this.lengthOfUsualSet=25;
         this.lengthOfLastSet=15;
