@@ -195,8 +195,8 @@
     function drawMatchLog()
     {
         con.run({
-            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype);",
-            values:null,
+            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype) AND (r.match_id=?);",
+            values:[game.id],
             onSuccess:function(t,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -219,6 +219,49 @@
             onError:function(t,err) { $("#matchLog").html("<p id='empty'>There are error to show.</p>");
                 console.log("Error!"); }
         });
+    }
+    function drawMatchReport()
+    {
+        var hAceCount,aAceCount=0;
+        var hBlkCount,aBlkCount=0;
+        var hErrCount,aErrCount=0;
+        var hErrAceCount,aErrAceCount=0;
+        var hErrAttCount,aErrAttCount=0;
+        var hAttCount,aAttCount=0;
+        var hAtt1Count,aAtt1Count=0;
+        var hAtt2Count,aAtt2Count=0;
+        var hAtt3Count,aAtt3Count=0;
+        var hAtt4Count,aAtt4Count=0;
+        var hAtt5Count,aAtt5Count=0;
+        var hAtt6Count,aAtt6Count=0;
+
+        con.run({
+            query:"SELECT COUNT(eventtype) as hAceCount FROM rounds WHERE winside = ? AND eventtype = ? AND match_id=?;",
+            values:[1,1,game.id],
+            onSuccess:function(t,r) {
+                        hAceCount = r.rows.item(0).hAceCount;
+            },
+            onError:function(t,err) {
+                console.log("Error!");
+            }
+        });
+        var tableReport='<table class="table table-bordered table-stripped" id="matchReportTable">';
+        tableReport+='<tr>'+hAceCount+'<td></td><td>Aces</td><td>'+aAceCount+'</td></tr>';
+        tableReport+='<tr>'+hBlkCount+'<td></td><td>Blocks</td><td>'+aBlkCount+'</td></tr>';
+        tableReport+='<tr>'+hErrCount+'<td></td><td>Errors</td><td>'+aErrCount+'</td></tr>';
+        tableReport+='<tr>'+hErrAceCount+'<td></td><td>Ace Errors</td><td>'+aErrAceCount+'</td></tr>';
+        tableReport+='<tr>'+hAceCount+'<td></td><td>Attack Errors</td><td>'+aErrAttCount+'</td></tr>';
+        tableReport+='<tr>'+hAttCount+'<td></td><td>Attacks</td><td>'+aAtt4Count+'</td></tr>';
+        tableReport+='<tr>'+hAtt1Count+'<td></td><td>Attacks 1</td><td>'+aAtt4Count+'</td></tr>';
+        tableReport+='<tr>'+hAtt2Count+'<td></td><td>Attacks 2</td><td>'+aAtt4Count+'</td></tr>';
+        tableReport+='<tr>'+hAtt3Count+'<td></td><td>Attacks 3</td><td>'+aAtt4Count+'</td></tr>';
+        tableReport+='<tr>'+hAtt4Count+'<td></td><td>Attacks 4</td><td>'+aAtt4Count+'</td></tr>';
+        tableReport+='<tr>'+hAtt5Count+'<td></td><td>Attacks 5</td><td>'+aAtt5Count+'</td></tr>';
+        tableReport+='<tr>'+hAtt6Count+'<td></td><td>Attacks 6</td><td>'+aAtt6Count+'</td></tr>';
+        tableReport+='</table>';
+
+        $("#matchReport").html(tableReport);
+
     }
     function saveMatchSettings()
     {
@@ -244,14 +287,16 @@
     }
     function getMatchId()
     {
-        var v_id=0;
+        var v_id=1;
         con.run({
             query:"SELECT MAX(id) as mid FROM matches",
             values:null,
             onSuccess:function(t,r) {
                 var v_id=Number(r.rows.item(0).mid);
             },
-            onError:null
+            onError:function(tx,err){
+                console.log("error getmatchid");
+            }
         });
         return v_id;
     }
@@ -279,6 +324,7 @@
             $( "#tabs" ).tabs( {active: 2} );
             game.status=1;
             drawMatchLog();
+            drawMatchReport();
         };
         this.endSet=function(winside)
         {
@@ -406,9 +452,10 @@
         {
             initDB();
             var isInit=1;
+            game_id=getMatchId()+1;
+            game=new Game(game_id);
         }
-        game_id=getMatchId()+1;
-        game=new Game(game_id);
+
 
         $("#HAceButton").click(function (){game.addMatchEvent(1, 1); });
         $("#AAceButton").click(function (){game.addMatchEvent(1, 2); });
@@ -560,7 +607,7 @@
         <div id="matchLog"></div>
     </div>
     <div id="tabs-4">
-
+        <div id=matchReport"></div>
     </div>
 
 </div>
