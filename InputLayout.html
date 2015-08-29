@@ -46,6 +46,22 @@
         });
     }
     function initDB () {
+        con.run({query:"DROP TABLE eventtypes"
+            ,values:null,
+            onSuccess:function(tx,r) {
+                alrt('Table EventTypes dropped.');
+            },
+            onError:function(tx,err) {
+                alrt("Error in table EventTypes drop!");
+            }});
+        con.run({query:"DROP TABLE matchstatuses"
+            ,values:null,
+            onSuccess:function(tx,r) {
+                alrt('Table matchstatuses dropped.');
+            },
+            onError:function(tx,err) {
+                alrt("Error in table matchstatuses drop!");
+            }});
     con.run({query:"CREATE TABLE IF NOT EXISTS eventTypes (id   INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name VARCHAR (20) UNIQUE NOT NULL);"
       ,values:null,
         onSuccess:function(tx,r) {
@@ -54,7 +70,14 @@
         onError:function(tx,err) {
             alrt("Error in table EventTypes creation!");
         }});
-
+        con.run({query:"CREATE TABLE IF NOT EXISTS MatchStatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
+            values:null,
+            onSuccess:function(tx,r) {
+                alert('Table MatchStatuses created.');
+            },
+            onError:function(tx,err) {
+                alert("Error in table MatchStatuses creation!");
+            }});
     con.run({query:"CREATE TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));",
         values:null,
         onSuccess:function(tx,r) {
@@ -73,27 +96,20 @@
             alert("Error in table Rounds creation!");
         }});
 
-        con.run({query:"CREATE TABLE IF NOT EXISTS matchstatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
-            values:null,
-            onSuccess:function(tx,r) {
-                alert('Table MatchStatuses created.');
-            },
-            onError:function(tx,err) {
-                alert("Error in table MatchStatuses creation!");
-            }});
+
         con.run({query:"INSERT INTO MatchStatuses (id, Name) VALUES (0, 'Начат');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert MatchStatuses 0 created.');
+                alert('insert matchstatuses 0 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert MatchStatuses 0 creation!");
+                alert("Error in insert matchstatuses 0 creation!");
             }});
-        con.run({query:"INSERT INTO MatchStatuses (id, Name) VALUES (1, 'Завершен');",
+        con.run({query:"INSERT INTO MatchStatuses (id, name) VALUES (1, 'Завершен');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert MatchStatuses 1 created.');
+                alert('insert matchstatuses  created.');
             },
             onError:function(tx,err) {
-                alert("Error in MatchStatuses EventTypes 1 creation!");
+                alert("Error in insert matchstatuses 1 creation!");
             }});
 
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');",
@@ -173,30 +189,14 @@
             onError:function(tx,err) {
                 alert("Error in insert EventTypes 10 creation!");
             }});
-        con.run({query:"DROP view matchlog;",
-            values:null,
-            onSuccess:function(tx,r) {
-                alert('view matchlog dropped.');
-            },
-            onError:function(tx,err) {
-                alert("Error in view matchlog drop!");
-            }});
-        con.run({query:"CREATE VIEW IF NOT EXISTS  matchlog AS SELECT r.*,e.name AS eventname FROM matches m, rounds r, eventTypes e WHERE (m.id = r.match_id) AND (e.id = r.eventtype);",
-            values:null,
-            onSuccess:function(tx,r) {
-                alert('view matchlog created.');
-            },
-            onError:function(tx,err) {
-                alert("Error in view matchlog creation!");
-            }});
 
 
     }
     function drawMatchLog()
     {
         con.run({
-            query:"SELECT * FROM matchlog WHERE id=? ORDER BY round_id",
-            values:[game.id],
+            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype);",
+            values:null,
             onSuccess:function(t,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -244,25 +244,25 @@
     }
     function getMatchId()
     {
-        var v_mid=0;
+        var v_id=0;
         con.run({
-            query:"SELECT MAX(id) as mid FROM matches;",
+            query:"SELECT MAX(id) as mid FROM matches",
             values:null,
             onSuccess:function(t,r) {
-                v_mid=Number(r.rows.item(0).mid);
+                var v_id=Number(r.rows.item(0).mid);
             },
-            onError:function(tx,err){alert("getID error");}
+            onError:null
         });
-        return v_mid;
+        return v_id;
     }
 
-        function Game(id)
+        function Game(m_id)
     {
         this.hTeam='';
         this.aTeam='';
         this.hscore=0;
         this.ascore=0;
-        this.id=Number(id);
+        this.id=m_id;
         this.numberOfSets=3;
         this.lengthOfUsualSet=25;
         this.lengthOfLastSet=15;
@@ -389,8 +389,8 @@
 
 
     }
-    var m_id=getMatchId()+1;
-    var game=new Game(m_id);
+    var game_id=getMatchId()+1;
+    var game=new Game(game_id);
     var isInit=undefined;
     function refreshScore()
     {
