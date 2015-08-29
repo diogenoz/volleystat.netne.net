@@ -389,8 +389,8 @@
 
 
     }
-    var game_id=getMatchId()+1;
-    var game=new Game(game_id);
+    var game_id=0;
+    var game=null;
     var isInit=undefined;
     function refreshScore()
     {
@@ -407,6 +407,8 @@
             initDB();
             var isInit=1;
         }
+        game_id=getMatchId()+1;
+        game=new Game(game_id);
 
         $("#HAceButton").click(function (){game.addMatchEvent(1, 1); });
         $("#AAceButton").click(function (){game.addMatchEvent(1, 2); });
