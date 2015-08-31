@@ -224,7 +224,7 @@
     function drawPreviousMatches()
     {
         con.run({
-            query:"SELECT m.date,m.hteam,m.ateam,m.hset,m.aset,ms.name as statusname,m.id FROM matches m,matchstatuses ms WHERE ms.id=m.status ORDER BY m.date;",
+            query:"SELECT m.date,m.hteam,m.ateam,m.hset,m.aset,ms.name as statusname,m.id FROM matches m,matchstatuses ms WHERE ms.id=m.status ORDER BY m.date LIMIT 10;",
             values:null,
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
@@ -287,7 +287,7 @@
     function attackSummary(winside,eventtype,mid,elementname)
     {
         con.run({
-            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND ((r.eventtype BETWEEN ? AND ?);",
+            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND ((r.eventtype BETWEEN ? AND ?));",
             values:[mid,winside,eventtype[0],eventtype[1]],
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
@@ -444,7 +444,7 @@
         });
 
     }
-        function addSummary(sum){game.summary=sum;}
+
         function Game(m_id)
     {
         this.hTeam='';
@@ -462,7 +462,7 @@
         this.status=0;
         this.matchdate=new Date();
 
-        this.summary;
+
 
         this.endMatch=function()
         {
