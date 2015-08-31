@@ -391,7 +391,7 @@
             query:"SELECT * FROM matches m WHERE m.ID=?;",
             values:[id],
             onSuccess:function(tx,r) {
-                alert("match load");
+
                 console.log("match load");
                 if (r.rows.length >= 1) {
                     for (var i = 0; i < r.rows.length; i++) {
@@ -678,8 +678,13 @@
     $(function() {
         $( "#tabs" ).tabs();
         $( "#tabs" ).tabs("disable", "#tabs-2");
+  });
 
-
+    $( "#tabs-3" ).click(function(){
+        drawMatchLog();
+    });
+    $( "#tabs-4" ).click(function(){
+        drawMatchReport();
     });
 
 </script>
