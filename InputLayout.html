@@ -232,7 +232,7 @@
                     vals  += '<thead><td>Date</td><td>Score</td><td>Status</td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
-                        vals +="<tr id='matchRow' matchid='"+item.id+"'><td>"+Date(item.date,"dd-mm-YYYY hh:m:ss")+"</td><td>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</td><td>"+item.statusname+"</td></tr>";
+                        vals +="<tr ><td>"+Date(item.date,"dd-mm-YYYY hh:m:ss")+"</td><td><a href='javascript:loadMatch("+item.id+");'>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</a></td><td>"+item.statusname+"</td></tr>";
 
                     }
                     vals  += '</table>';
@@ -307,6 +307,44 @@
             onError:function(tx,err) {
                 alert("Error in update matchsettings creation!");
             }});
+    }
+
+    loadMatch(id)=function
+    {
+
+        con.run({
+            query:"SELECT * FROM matches m WHERE m.ID=?;",
+            values:[id],
+            onSuccess:function(tx,r) {
+                alert("match load");
+                console.log("match load");
+                if (r.rows.length >= 1) {
+                    for (var i = 0; i < r.rows.length; i++) {
+                        var item = r.rows.item(i);
+                        console.log(item.id);
+                        game.id=item.id;
+                        game.hTeam=item.hTeam;
+                        game.aTeam=item.aTeam;
+                        game.hSet=item.hSet;
+                        game.aSet=item.aSet;
+                        game.hscore=item.hscore;
+                        game.ascore=item.ascore;
+                        game.status=item.status;
+                        game.currentRound=item.currentRound;
+                        game.currentSet=item.currentSet;
+                        game.numberOfSets=item.numberOfSets;
+                        game.lengthOfUsualSet=item.lengthOfUsualSet;
+                        game.lengthOfLastSet=item.lengthOfLastSet;
+                        game.matchdate=item.date;
+                    }
+
+                } else alert("empty rows");
+            },
+            onError:function(tx,err) {
+                console.log("Error!");
+            }
+        });
+
     }
 
 
@@ -441,38 +479,7 @@
             }
 
         };
-    this.load=function(id)
-    {
 
-            con.run({
-                query:"SELECT * FROM matches m WHERE m.id=?;",
-                values:[id],
-                onSuccess:function(tx,r) {
-                    if (r.rows.length >= 1) {
-                        for (var i = 0; i < r.rows.length; i++) {
-                            var item = r.rows.item(i);
-                            this.id=item.id;
-                            this.hTeam=item.hTeam;
-                            this.aTeam=item.aTeam;
-                            this.hSet=item.hSet;
-                            this.aSet=item.aSet;
-                            this.status=item.status;
-                            this.currentRound=item.currentRound;
-                            this.currentSet=item.currentSet;
-                            this.numberOfSets=item.numberOfSets;
-                            this.lengthOfUsualSet=item.lengthOfUsualSet;
-                            this.lengthOfLastSet=item.lengthOfLastSet;
-                            this.date=item.date;
-                        }
-
-                    } else alert("empty rows");
-                },
-                onError:function(tx,err) {
-                    console.log("Error!");
-                }
-            });
-
-    }
 
     }
     var game_id=null;
@@ -528,9 +535,9 @@
         $("#HAtt6Button").click(function (){game.addMatchEvent(10, 1); });
         $("#AAtt6Button").click(function (){game.addMatchEvent(10, 2); });
 
-        $("#matchRow").click(function ()
+        $(".matchRow").click(function ()
         {
-            var mid=$("#matchRow").attr("matchid");
+            var mid=$(".matchRow").attr("matchid");
             game.load(mid);
         });
 
