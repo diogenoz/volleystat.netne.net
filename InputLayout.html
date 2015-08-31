@@ -411,6 +411,15 @@
                         game.lengthOfUsualSet=item.lengthOfUsualSet;
                         game.lengthOfLastSet=item.lengthOfLastSet;
                         game.matchdate=item.date;
+                        if (game.status===0)
+                        {
+                            $( "#tabs" ).tabs("enable", "#tabs-2");
+                            $( "#tabs" ).tabs( {active: 1} );
+                        }
+                        if(game.status===1)
+                        {
+                            $( "#tabs" ).tabs( {active: 2});
+                        }
                     }
 
                 } else alert("empty rows");
@@ -419,6 +428,8 @@
                 console.log("Error!");
             }
         });
+
+
 
     }
 
@@ -563,7 +574,6 @@
                 query: qq,
                 values: vv,
                 onSuccess: function (tx, r) {
-                    alert("Round Added!");
                     refreshScore();
                 },
                 onError: function (tx, err) {
@@ -638,27 +648,29 @@
         $(".matchRow").click(function ()
         {
             var mid=$(".matchRow").attr("matchid");
-            game.load(mid);
+            loadMatch(mid);
         });
 
         $("#start").click(function ()
         {
 
-            game.hTeam=$("#hTeam").val();
-            game.aTeam=$("#aTeam").val();
-            game.numberOfSets=Number($("#numberOfSets").val());
-            game.lengthOfUsualSet=Number($("#lengthOfUsualSet").val());
-            game.lengthOfLastSet=Number($("#lengthOfLastSet").val());
+                game.hTeam=$("#hteam").val();
+                game.aTeam=$("#ateam").val();
+                game.numberOfSets=Number($("#numberOfSets").val());
+                game.lengthOfUsualSet=Number($("#lengthOfUsualSet").val());
+                game.lengthOfLastSet=Number($("#lengthOfLastSet").val());
 
-            $("#HTeamLabel").text(game.hTeam);
-            $("#ATeamLabel").text(game.aTeam);
+                $("#HTeamLabel").text(game.hTeam);
+                $("#ATeamLabel").text(game.aTeam);
 
 
-            $( "#tabs" ).tabs( "disable", "#tabs-1" );
-            $( "#tabs" ).tabs("enable", "#tabs-2");
-            $( "#tabs" ).tabs( {active: 1} );
-            $( "#tabs" ).tabs( "refresh" );
-            saveMatchSettings();
+                $( "#tabs" ).tabs( "disable", "#tabs-1" );
+                $( "#tabs" ).tabs("enable", "#tabs-2");
+                $( "#tabs" ).tabs( {active: 1} );
+
+                saveMatchSettings();
+
+
 
         });
     });
