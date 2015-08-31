@@ -232,7 +232,7 @@
                     vals  += '<thead><td>Date</td><td>Score</td><td>Status</td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
-                        vals +="<tr ><td>"+Date(item.date,"dd-mm-YYYY hh:m:ss")+"</td><td><a href='javascript:loadMatch("+item.id+");'>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</a></td><td>"+item.statusname+"</td></tr>";
+                        vals +="<tr ><td>"+item.date+"</td><td><a href='javascript:loadMatch("+item.id+");'>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</a></td><td>"+item.statusname+"</td></tr>";
 
                     }
                     vals  += '</table>';
@@ -243,44 +243,118 @@
                 console.log("Error!"); }
         });
     }
-    function drawMatchReport()
-    {
-        var hAceCount=0;var aAceCount=0;
-        var hBlkCount=0;var aBlkCount=0;
-        var hErrCount=0;var aErrCount=0;
-        var hErrAceCount=0;var aErrAceCount=0;
-        var hErrAttCount=0;var aErrAttCount=0;
-        var hAttCount=0;var aAttCount=0;
-        var hAtt1Count=0;var aAtt1Count=0;
-        var hAtt2Count=0;var aAtt2Count=0;
-        var hAtt3Count=0;var aAtt3Count=0;
-        var hAtt4Count=0;var aAtt4Count=0;
-        var hAtt5Count=0;var aAtt5Count=0;
-        var hAtt6Count=0;var aAtt6Count=0;
 
+    function eventSummary(winside,eventtype,mid,elementname)
+    {
         con.run({
-            query:"SELECT COUNT(eventtype) as hAceCount FROM rounds WHERE winside = ? AND eventtype = ? AND match_id=?;",
-            values:[1,1,game.id],
+            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype=?);",
+            values:[mid,winside,eventtype],
             onSuccess:function(tx,r) {
-                        hAceCount = r.rows.item(0).hAceCount;
+                if (r.rows.length >= 1) {
+                    for (var i = 0; i < r.rows.length; i++) {
+                        var item = r.rows.item(i);
+                        console.log("res: "+item.res);
+                        $("#"+elementname).html(item.res);
+                    }
+                } else {console.log("empty matchreport");}
             },
             onError:function(tx,err) {
-                console.log("Error!");
+                console.log("match report error!");
             }
         });
+
+    }
+    function errorSummary(winside,eventtype,mid,elementname)
+    {
+        con.run({
+            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND ((r.eventtype=?) OR (r.eventtype=?));",
+            values:[mid,winside,eventtype[0],eventtype[1]],
+            onSuccess:function(tx,r) {
+                if (r.rows.length >= 1) {
+                    for (var i = 0; i < r.rows.length; i++) {
+                        var item = r.rows.item(i);
+                        console.log("res: "+item.res);
+                        $("#"+elementname).html(item.res);
+                    }
+                } else {console.log("empty matchreport");}
+            },
+            onError:function(tx,err) {
+                console.log("match report error!");
+            }
+        });
+
+    }
+    function attackSummary(winside,eventtype,mid,elementname)
+    {
+        con.run({
+            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND ((r.eventtype BETWEEN ? AND ?);",
+            values:[mid,winside,eventtype[0],eventtype[1]],
+            onSuccess:function(tx,r) {
+                if (r.rows.length >= 1) {
+                    for (var i = 0; i < r.rows.length; i++) {
+                        var item = r.rows.item(i);
+                        console.log("res: "+item.res);
+                        $("#"+elementname).html(item.res);
+                    }
+                } else {console.log("empty matchreport");}
+            },
+            onError:function(tx,err) {
+                console.log("match report error!");
+            }
+        });
+
+    }
+    function drawMatchReport()
+    {
+        eventSummary(1,1,game.id,"hAceCount");
+        eventSummary(2,1,game.id,"aAceCount");
+
+        eventSummary(1,2,game.id,"hBlkCount");
+        eventSummary(2,2,game.id,"aBlkCount");
+
+        hErrCount=errorSummary(1,[3,4],game.id,"hErrCount");
+        aErrCount=errorSummary(2,[3,4],game.id,"aErrCount");
+
+        eventSummary(1,3,game.id,"hErrAceCount");
+        eventSummary(2,3,game.id,"aErrAceCount");
+
+        eventSummary(1,4,game.id,"hErrAttCount");
+        eventSummary(2,4,game.id,"aErrAttCount");
+
+        hAttCount=attackSummary(1,[5,10],game.id,"hAttCount");
+        aAttCount=attackSummary(2,[5,10],game.id,"aAttCount");
+
+        eventSummary(1,5,game.id,"hAtt1Count");
+        eventSummary(2,5,game.id,"aAtt1Count");
+
+        eventSummary(1,6,game.id,"hAtt2Count");
+        eventSummary(2,6,game.id,"aAtt2Count");
+
+        eventSummary(1,7,game.id,"hAtt3Count");
+        eventSummary(2,7,game.id,"aAtt3Count");
+
+        eventSummary(1,8,game.id,"hAtt4Count");
+        eventSummary(2,8,game.id,"aAtt4Count");
+
+        eventSummary(1,9,game.id,"hAtt5Count");
+        eventSummary(2,9,game.id,"aAtt5Count");
+
+        eventSummary(1,10,game.id,"hAtt6Count");
+        eventSummary(2,10,game.id,"aAtt6Count");
+
         var tableReport='<table class="table table-bordered table-stripped" id="matchReportTable">';
-        tableReport+='<tr><td>'+hAceCount+'</td><td>Aces</td><td>'+aAceCount+'</td></tr>';
-        tableReport+='<tr><td>'+hBlkCount+'</td><td>Blocks</td><td>'+aBlkCount+'</td></tr>';
-        tableReport+='<tr><td>'+hErrCount+'</td><td>Errors</td><td>'+aErrCount+'</td></tr>';
-        tableReport+='<tr><td>'+hErrAceCount+'</td><td>Ace Errors</td><td>'+aErrAceCount+'</td></tr>';
-        tableReport+='<tr><td>'+hErrAttCount+'</td><td>Attack Errors</td><td>'+aErrAttCount+'</td></tr>';
-        tableReport+='<tr><td>'+hAttCount+'</td><td>Attacks</td><td>'+aAttCount+'</td></tr>';
-        tableReport+='<tr><td>'+hAtt1Count+'</td><td>Attacks 1</td><td>'+aAtt1Count+'</td></tr>';
-        tableReport+='<tr><td>'+hAtt2Count+'</td><td>Attacks 2</td><td>'+aAtt2Count+'</td></tr>';
-        tableReport+='<tr><td>'+hAtt3Count+'</td><td>Attacks 3</td><td>'+aAtt3Count+'</td></tr>';
-        tableReport+='<tr><td>'+hAtt4Count+'</td><td>Attacks 4</td><td>'+aAtt4Count+'</td></tr>';
-        tableReport+='<tr><td>'+hAtt5Count+'</td><td>Attacks 5</td><td>'+aAtt5Count+'</td></tr>';
-        tableReport+='<tr><td>'+hAtt6Count+'</td><td>Attacks 6</td><td>'+aAtt6Count+'</td></tr>';
+        tableReport+='<tr><td id="hAceCount"></td><td>Aces</td><td id="aAceCount"></td></tr>';
+        tableReport+='<tr><td id="hBlkCount"></td><td>Blocks</td><td id="aBlkCount"></td></tr>';
+        tableReport+='<tr><td id="hErrCount"></td><td>Errors</td><td id="aErrCount"></td></tr>';
+        tableReport+='<tr><td id="hErrAceCount"></td><td>Ace Errors</td><td id="aErrAceCount"></td></tr>';
+        tableReport+='<tr><td id="hErrAttCount"></td><td>Attack Errors</td><td id="aErrAttCount"></td></tr>';
+        tableReport+='<tr><td id="hAttCount"></td><td>Attacks</td><td id="aAttCount"></td></tr>';
+        tableReport+='<tr><td id="hAtt1Count"></td><td>Attacks 1</td><td id="aAtt1Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt2Count"></td><td>Attacks 2</td><td id="aAtt2Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt3Count"></td><td>Attacks 3</td><td id="aAtt3Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt4Count"></td><td>Attacks 4</td><td id="aAtt4Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt5Count"></td><td>Attacks 5</td><td id="aAtt5Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt6Count"></td><td>Attacks 6</td><td id="aAtt6Count"></td></tr>';
         tableReport+='</table>';
 
         $("#matchReport").html(tableReport);
@@ -299,14 +373,15 @@
     }
     function updateMatchSettings()
     {
-        con.run({query:"UPDATE matches SET hTeam=?, aTeam=?, date=?, NumberOfSets=?, LengthOfUsualSet=?, LengthOfLastSet=?, hSet=?, aSet=?, currentSet=?, currentRound=?, status=?) WHERE id=?;",
+        con.run({query:"UPDATE matches SET hTeam=?, aTeam=?, date=?, NumberOfSets=?, LengthOfUsualSet=?, LengthOfLastSet=?, hSet=?, aSet=?, currentSet=?, currentRound=?, status=? WHERE id=?;",
             values:[game.hTeam,game.aTeam,game.matchdate,game.numberOfSets,game.lengthOfUsualSet,game.lengthOfLastSet,game.hSet,game.aSet,game.currentSet,game.currentRound,game.status,game.id],
             onSuccess:function(tx,r) {
-                alert('update matchsettings created.');
+                console.log('update matchsettings created.');
             },
             onError:function(tx,err) {
-                alert("Error in update matchsettings creation!");
-            }});
+                console.log("Error in update matchsettings creation!");
+            }
+        });
     }
 
     function loadMatch(id)
@@ -369,6 +444,7 @@
         });
 
     }
+        function addSummary(sum){game.summary=sum;}
         function Game(m_id)
     {
         this.hTeam='';
@@ -385,6 +461,8 @@
         this.currentSet=0;
         this.status=0;
         this.matchdate=new Date();
+
+        this.summary;
 
         this.endMatch=function()
         {
@@ -504,6 +582,7 @@
 
     }
     var game=null;
+    var summary;
     var isInit=undefined;
     function refreshScore()
     {
@@ -511,6 +590,7 @@
         $("#AScoreLabel").text(game.ascore);
         $("#HSetLabel").text(game.hSet);
         $("#ASetLabel").text(game.aSet);
+        updateMatchSettings();
 
     }
     $(document).ready(function() {
