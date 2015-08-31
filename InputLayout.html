@@ -309,7 +309,7 @@
             }});
     }
 
-    loadMatch(id)=function
+    function loadMatch(id)
     {
 
         con.run({
@@ -347,7 +347,28 @@
 
     }
 
+    function addMatch()
+    {
+        con.run({
+            query:"SELECT max(m.id) as mid FROM matches m;",
+            values:null,
+            onSuccess:function(tx,r) {
+                console.log("match add");
+                if (r.rows.length >= 1) {
+                    for (var i = 0; i < r.rows.length; i++) {
+                        var item = r.rows.item(i);
+                        console.log(item.mid);
+                        game=new Game(Number(item.mid)+1);
+                    }
 
+                } else alert("empty rows");
+            },
+            onError:function(tx,err) {
+                console.log("Error addNatch!");
+            }
+        });
+
+    }
         function Game(m_id)
     {
         this.hTeam='';
@@ -482,7 +503,6 @@
 
 
     }
-    var game_id=null;
     var game=null;
     var isInit=undefined;
     function refreshScore()
@@ -495,13 +515,13 @@
     }
     $(document).ready(function() {
 
+
         if (isInit===undefined)
         {
             initDB();
             drawPreviousMatches();
             isInit=1;
-            game_id=Number(getMatchId()+1);
-            game=new Game(game_id);
+            addMatch();
         }
 
 
@@ -569,26 +589,7 @@
 
 
     });
-    function getMatchId()
-    {
-        var match_id=0;
-        con.run({
-            query:"SELECT m.id as matchid FROM matches m ORDER BY m.id DESC;",
-            values:null,
-            onSuccess:function(tx,r) {
 
-                    var item=r.rows.item(0);
-                    match_id = Number(item["matchid"]);
-
-
-            },
-            onError:function(tx,err) {
-                alert(err.message);
-                match_id=1;
-            }
-        });
-        return match_id;
-    }
 </script>
 
 <div id="tabs">
