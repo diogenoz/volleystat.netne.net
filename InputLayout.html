@@ -201,16 +201,16 @@
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
-                    vals  += '<thead><td>RoundID</td><td>hEvent</td><td>hScore</td><td>aScore</td><td>aEvent</td></thead>';
+                    vals  += '<thead><td>hEvent</td><td>hScore</td><td>aScore</td><td>aEvent</td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
                         if (Number(item.winside)===1)
                         {
-                            vals +="<tr><td>"+item.round_id+"</td><td>"+item.eventname+"</td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td></td></tr>";
+                            vals +="<tr><td>"+item.eventname+"</td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td></td></tr>";
                         }
                         if (Number(item.winside)===2)
                         {
-                            vals +="<tr><td>"+item.round_id+"</td><td></td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td>"+item.eventname+"</td></tr>";
+                            vals +="<tr><td></td><td>"+item.hscore+"</td><td>"+item.ascore+"</td><td>"+item.eventname+"</td></tr>";
                         }
                     }
                     vals  += '</table>';
