@@ -195,9 +195,18 @@
     }
     function drawMatchLog()
     {
+        var vals='<div id="matchLogTabs"><ul>';
+        for (var i=0;i<=game.currentSet;i++)
+        {
+            vals+='<li><a href="#tabs-'+i+'">'+i+'Set</a></li>';
+        }
+
+        game.activeSet = Number($( "#matchLogTabs" ).tabs( "option", "active" ));
+        vals+='</ul></div>';
+        $("#matchLog").append(vals);
         con.run({
-            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype) AND (r.match_id=?);",
-            values:[game.id],
+            query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype) AND (r.match_id=?) AND (r.set_id=?) ORDER BY r.round_id;",
+            values:[game.id,game.activeSet],
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -214,8 +223,8 @@
                         }
                     }
                     vals  += '</table>';
-                    $("#matchLog").html(vals);
-                } else $("#matchLog").html("<p id='empty'>There are no enteries to show.</p>");
+                    $("#matchLog").append(vals);
+                } else $("#matchLog").append("<p id='empty'>There are no enteries to show.</p>");
             },
             onError:function(tx,err) { $("#matchLog").html("<p id='empty'>There are error to show.</p>");
                 console.log("Error!"); }
@@ -223,13 +232,14 @@
     }
     function drawPreviousMatches()
     {
+
         con.run({
             query:"SELECT m.date,m.hteam,m.ateam,m.hset,m.aset,ms.name as statusname,m.id FROM matches m,matchstatuses ms WHERE ms.id=m.status ORDER BY m.date LIMIT 10;",
             values:null,
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
-                    var vals = '<table class="table table-bordered table-stripped" id="previousMatchesTable">';
-                    vals  += '<thead><td>Date</td><td>Score</td><td>Status</td></thead>';
+                    vals = '<table class="table table-bordered table-stripped" id="previousMatchesTable">';
+                    vals += '<thead><td>Date</td><td>Score</td><td>Status</td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
                         vals +="<tr ><td>"+item.date+"</td><td><a href='javascript:loadMatch("+item.id+");'>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</a></td><td>"+item.statusname+"</td></tr>";
@@ -678,7 +688,14 @@
         $( "#tabs" ).tabs();
         $( "#tabs" ).tabs("disable", "#tabs-2");
   });
+    $(function() {
+        $( "#matchLogTabs" ).tabs();
 
+    });
+    $(function() {
+        $( "#matchReportTabs" ).tabs();
+
+    });
     $( "#tabs-3" ).click(function(){
         //drawMatchLog();
     });
