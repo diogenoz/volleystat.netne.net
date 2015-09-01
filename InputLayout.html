@@ -473,15 +473,13 @@
         this.status=0;
         this.matchdate=new Date();
 
-
-
         this.endMatch=function()
         {
             $( "#tabs" ).tabs( "disable", "#tabs-2" );
             $( "#tabs" ).tabs( {active: 2} );
             game.status=1;
-            drawMatchLog();
-            drawMatchReport();
+            //drawMatchLog();
+            //drawMatchReport();
         };
         this.endSet=function(winside)
         {
@@ -601,7 +599,8 @@
         $("#HSetLabel").text(game.hSet);
         $("#ASetLabel").text(game.aSet);
         updateMatchSettings();
-
+        drawMatchLog();
+        drawMatchReport();
     }
     $(document).ready(function() {
 
@@ -681,10 +680,10 @@
   });
 
     $( "#tabs-3" ).click(function(){
-        drawMatchLog();
+        //drawMatchLog();
     });
     $( "#tabs-4" ).click(function(){
-        drawMatchReport();
+        //drawMatchReport();
     });
 
 </script>
