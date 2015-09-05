@@ -195,18 +195,39 @@
     }
     function drawMatchLog()
     {
-        var vals='<div id="matchLogTabs"><ul>';
+
+        var vals='<div id="matchLogTabs" activeTab=""><ul>';
         for (var i=0;i<=game.currentSet;i++)
         {
-            vals+='<li><a href="#tabs-'+i+'">'+i+'Set</a></li>';
+            vals+='<li><a href="#tabs-'+i+'">'+Number(i+1)+'Set</a></li>';
         }
+        vals+='</ul>';
+        for (var i=0;i<=game.currentSet;i++)
+        {
+            vals+='<div id="#tabs-'+i+'"></div>';
+        }
+        vals+='</div>';
+        $("#matchLog").html(vals);
+        $( "#matchLogTabs" ).tabs();
 
-        game.activeSet = Number($( "#matchLogTabs" ).tabs( "option", "active" ));
-        vals+='</ul></div>';
-        $("#matchLog").append(vals);
+
+        $( "#matchLogTabs" ).tabs({
+            beforeLoad: function( event, ui )
+            {
+                var activeTab = $( "#matchLogTabs" ).tabs( "option", "active" );
+                $("#matchLogTabs").setAttribute("activeTab",activeTab);
+                drawMatchLogRounds();
+            }
+        });
+
+        $( "#matchLogTabs" ).tabs("load",game.currentSet);
+
+    }
+    function drawMatchLogRounds()
+    {
         con.run({
             query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype) AND (r.match_id=?) AND (r.set_id=?) ORDER BY r.round_id;",
-            values:[game.id,game.activeSet],
+            values:[game.id,$("#matchLogTabs").getAttribute("activeTab")],
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -497,13 +518,18 @@
             this.ascore=0;
             this.currentRound=0;
 
+
             if (winside===1){this.hSet+=1;}
             if (winside===2){this.aSet+=1;}
 
             if (this.isMatchEnded()===true)
             {
                 this.endMatch();
+            } else
+            {
+                this.currentSet+=1;
             }
+
 
         };
         this.isMatchEnded=function()
