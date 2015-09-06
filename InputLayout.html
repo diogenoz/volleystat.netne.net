@@ -208,16 +208,14 @@
         vals+='</div>';
         $("#matchLog").html(vals);
 
-        $("#matchLogTabs").tabs({active:game.currentSet});
-        drawMatchLogRounds();
-
         $( "#matchLogTabs" ).tabs({
             activate: function( event, ui )
             {
                 drawMatchLogRounds();
-                console.log("activate");
             }
         });
+
+        $("#matchLogTabs").tabs({active:game.currentSet});
     }
     function drawMatchLogRounds()
     {
@@ -648,11 +646,13 @@
         $("#HAceButton").click(function (){game.addMatchEvent(1, 1); });
         $("#AAceButton").click(function (){game.addMatchEvent(1, 2); });
 
-        $("#HErrAceButton").click(function (){game.addMatchEvent(2, 1); });
-        $("#AErrAceButton").click(function (){game.addMatchEvent(2, 2); });
+        $("#HBlkButton").click(function (){game.addMatchEvent(2, 1); });
+        $("#ABlkButton").click(function (){game.addMatchEvent(2, 2); });
 
-        $("#HBlkButton").click(function (){game.addMatchEvent(3, 1); });
-        $("#ABlkButton").click(function (){game.addMatchEvent(3, 2); });
+        $("#HErrAceButton").click(function (){game.addMatchEvent(3, 1); });
+        $("#AErrAceButton").click(function (){game.addMatchEvent(3, 2); });
+
+
 
         $("#HErrAttButton").click(function (){game.addMatchEvent(4, 1); });
         $("#AErrAttButton").click(function (){game.addMatchEvent(4, 2); });
