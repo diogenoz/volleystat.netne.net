@@ -196,38 +196,39 @@
     function drawMatchLog()
     {
 
-        var vals='<div id="matchLogTabs" activeTab=""><ul>';
+        var vals='<div id="matchLogTabs" ><ul>';
         for (var i=0;i<=game.currentSet;i++)
         {
-            vals+='<li><a href="#tabs-'+i+'">'+Number(i+1)+'Set</a></li>';
+            vals+='<li><a href="#matchLogTabs-'+i+'">'+Number(i+1)+' Set</a></li>';
         }
         vals+='</ul>';
         for (var i=0;i<=game.currentSet;i++)
         {
-            vals+='<div id="#tabs-'+i+'"></div>';
+            vals+='<div id="matchLogTabs-'+i+'"></div>';
         }
         vals+='</div>';
         $("#matchLog").html(vals);
-        $( "#matchLogTabs" ).tabs();
 
+        $("#matchLogTabs").tabs({active:game.currentSet});
+        drawMatchLogRounds();
 
         $( "#matchLogTabs" ).tabs({
-            beforeLoad: function( event, ui )
+            load: function( event, ui )
             {
-                var activeTab = $( "#matchLogTabs" ).tabs( "option", "active" );
-                $("#matchLogTabs").setAttribute("activeTab",activeTab);
-                drawMatchLogRounds();
+                //drawMatchLogRounds();
+                console.log("load");
             }
         });
 
-        $( "#matchLogTabs" ).tabs("load",game.currentSet);
+
+
 
     }
     function drawMatchLogRounds()
     {
         con.run({
             query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype) AND (r.match_id=?) AND (r.set_id=?) ORDER BY r.round_id;",
-            values:[game.id,$("#matchLogTabs").getAttribute("activeTab")],
+            values:[game.id,game.currentSet],//$("#matchLogTabs").tabs("option", "active")],
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
@@ -244,10 +245,10 @@
                         }
                     }
                     vals  += '</table>';
-                    $("#matchLog").append(vals);
-                } else $("#matchLog").append("<p id='empty'>There are no enteries to show.</p>");
+                    $("#matchLogRounds").html(vals);
+                } else $("#matchLogRounds").html("<p id='empty'>There are no enteries to show.</p>");
             },
-            onError:function(tx,err) { $("#matchLog").html("<p id='empty'>There are error to show.</p>");
+            onError:function(tx,err) { $("#matchLogRounds").html("<p id='empty'>There are error to show.</p>");
                 console.log("Error!"); }
         });
     }
@@ -343,8 +344,8 @@
         eventSummary(1,2,game.id,"hBlkCount");
         eventSummary(2,2,game.id,"aBlkCount");
 
-        hErrCount=errorSummary(1,[3,4],game.id,"hErrCount");
-        aErrCount=errorSummary(2,[3,4],game.id,"aErrCount");
+        errorSummary(1,[3,4],game.id,"hErrCount");
+        errorSummary(2,[3,4],game.id,"aErrCount");
 
         eventSummary(1,3,game.id,"hErrAceCount");
         eventSummary(2,3,game.id,"aErrAceCount");
@@ -352,8 +353,8 @@
         eventSummary(1,4,game.id,"hErrAttCount");
         eventSummary(2,4,game.id,"aErrAttCount");
 
-        hAttCount=attackSummary(1,[5,10],game.id,"hAttCount");
-        aAttCount=attackSummary(2,[5,10],game.id,"aAttCount");
+        attackSummary(1,[5,10],game.id,"hAttCount");
+        attackSummary(2,[5,10],game.id,"aAttCount");
 
         eventSummary(1,5,game.id,"hAtt1Count");
         eventSummary(2,5,game.id,"aAtt1Count");
@@ -396,7 +397,7 @@
         con.run({query:"INSERT INTO matches (id,hTeam, aTeam, date, NumberOfSets, LengthOfUsualSet, LengthOfLastSet, hSet, aSet, currentSet, currentRound, status) VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
             values:[game.id,game.hTeam,game.aTeam,game.matchdate,game.numberOfSets,game.lengthOfUsualSet,game.lengthOfLastSet,game.hSet,game.aSet,game.currentSet,game.currentRound,game.status],
             onSuccess:function(tx,r) {
-                alert('insert matchsettings created.');
+
             },
             onError:function(tx,err) {
                 alert("Error in insert matchsettings creation!");
@@ -407,7 +408,7 @@
         con.run({query:"UPDATE matches SET hTeam=?, aTeam=?, date=?, NumberOfSets=?, LengthOfUsualSet=?, LengthOfLastSet=?, hSet=?, aSet=?, currentSet=?, currentRound=?, status=? WHERE id=?;",
             values:[game.hTeam,game.aTeam,game.matchdate,game.numberOfSets,game.lengthOfUsualSet,game.lengthOfLastSet,game.hSet,game.aSet,game.currentSet,game.currentRound,game.status,game.id],
             onSuccess:function(tx,r) {
-                console.log('update matchsettings created.');
+
             },
             onError:function(tx,err) {
                 console.log("Error in update matchsettings creation!");
@@ -427,7 +428,6 @@
                 if (r.rows.length >= 1) {
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
-                        console.log(item.id);
                         game.id=item.id;
                         game.hTeam=item.hTeam;
                         game.aTeam=item.aTeam;
@@ -714,20 +714,9 @@
         $( "#tabs" ).tabs();
         $( "#tabs" ).tabs("disable", "#tabs-2");
   });
-    $(function() {
-        $( "#matchLogTabs" ).tabs();
 
-    });
-    $(function() {
-        $( "#matchReportTabs" ).tabs();
 
-    });
-    $( "#tabs-3" ).click(function(){
-        //drawMatchLog();
-    });
-    $( "#tabs-4" ).click(function(){
-        //drawMatchReport();
-    });
+
 
 </script>
 
@@ -823,6 +812,7 @@
     </div>
     <div id="tabs-3">
         <div id="matchLog"></div>
+        <div id="matchLogRounds"></div>
     </div>
     <div id="tabs-4">
         <div id="matchReport"></div>
