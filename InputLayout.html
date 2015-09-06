@@ -269,11 +269,23 @@
         });
     }
 
-    function eventSummary(winside,eventtype,mid,elementname)
+    function eventSummary(winside,eventtype,mid,elementname,isOverallStatistic=false)
     {
+        var querySQL=null;
+        var vals=null;
+        if (isOverallStatistic===false)
+        {
+            querySQL="SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype=?) AND (r.set_id=?);";
+            vals=[mid,winside,eventtype,$("#matchReportTabs").tabs("option", "active")];
+        }
+        if (isOverallStatistic===true)
+        {
+            querySQL="SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype=?);";
+            vals=[mid,winside,eventtype]
+        }
         con.run({
-            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype=?);",
-            values:[mid,winside,eventtype],
+            query:querySQL,
+            values:vals,
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     for (var i = 0; i < r.rows.length; i++) {
@@ -331,6 +343,30 @@
     }
     function drawMatchReport()
     {
+        var vals='<div id="matchReportTabs" ><ul>';
+        for (var i=0;i<=game.currentSet;i++)
+        {
+            vals+='<li><a href="#matchReportTabs-'+i+'">'+Number(i+1)+' Set</a></li>';
+        }
+        vals+='</ul>';
+        for (var i=0;i<=game.currentSet;i++)
+        {
+            vals+='<div id="matchReportTabs-'+i+'"></div>';
+        }
+        vals+='</div>';
+        $("#matchReport").html(vals);
+
+        $( "#matchReportTabs" ).tabs({
+            activate: function( event, ui )
+            {
+                drawMatchReportSets();
+            }
+        });
+
+        $("#matchReportTabs").tabs({active:game.currentSet});
+    }
+    function drawMatchReportSets()
+    {
         eventSummary(1,1,game.id,"hAceCount");
         eventSummary(2,1,game.id,"aAceCount");
 
@@ -382,7 +418,7 @@
         tableReport+='<tr><td id="hAtt6Count"></td><td>Attacks 6</td><td id="aAtt6Count"></td></tr>';
         tableReport+='</table>';
 
-        $("#matchReport").html(tableReport);
+        $("#matchReportTable").html(tableReport);
 
     }
     function saveMatchSettings()
@@ -646,13 +682,11 @@
         $("#HAceButton").click(function (){game.addMatchEvent(1, 1); });
         $("#AAceButton").click(function (){game.addMatchEvent(1, 2); });
 
-        $("#HBlkButton").click(function (){game.addMatchEvent(2, 1); });
-        $("#ABlkButton").click(function (){game.addMatchEvent(2, 2); });
+        $("#HErrAceButton").click(function (){game.addMatchEvent(2, 1); });
+        $("#AErrAceButton").click(function (){game.addMatchEvent(2, 2); });
 
-        $("#HErrAceButton").click(function (){game.addMatchEvent(3, 1); });
-        $("#AErrAceButton").click(function (){game.addMatchEvent(3, 2); });
-
-
+        $("#HBlkButton").click(function (){game.addMatchEvent(3, 1); });
+        $("#ABlkButton").click(function (){game.addMatchEvent(3, 2); });
 
         $("#HErrAttButton").click(function (){game.addMatchEvent(4, 1); });
         $("#AErrAttButton").click(function (){game.addMatchEvent(4, 2); });
@@ -811,6 +845,7 @@
     </div>
     <div id="tabs-4">
         <div id="matchReport"></div>
+        <div id="matchReportTable"></div>
     </div>
 
 </div>
