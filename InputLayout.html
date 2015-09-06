@@ -195,7 +195,6 @@
     }
     function drawMatchLog()
     {
-
         var vals='<div id="matchLogTabs" ><ul>';
         for (var i=0;i<=game.currentSet;i++)
         {
@@ -213,22 +212,18 @@
         drawMatchLogRounds();
 
         $( "#matchLogTabs" ).tabs({
-            load: function( event, ui )
+            activate: function( event, ui )
             {
-                //drawMatchLogRounds();
-                console.log("load");
+                drawMatchLogRounds();
+                console.log("activate");
             }
         });
-
-
-
-
     }
     function drawMatchLogRounds()
     {
         con.run({
             query:"SELECT r.*,e.name as eventname FROM rounds r,eventTypes e WHERE (e.id = r.eventtype) AND (r.match_id=?) AND (r.set_id=?) ORDER BY r.round_id;",
-            values:[game.id,game.currentSet],//$("#matchLogTabs").tabs("option", "active")],
+            values:[game.id,$("#matchLogTabs").tabs("option", "active")],
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
