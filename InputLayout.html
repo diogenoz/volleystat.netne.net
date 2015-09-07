@@ -49,145 +49,145 @@
         con.run({query:"DROP TABLE eventtypes"
             ,values:null,
             onSuccess:function(tx,r) {
-                alert('Table EventTypes dropped.');
+                console.log('Table EventTypes dropped.');
             },
             onError:function(tx,err) {
-                alert("Error in table EventTypes drop!");
+                console.log("Error in table EventTypes drop!");
             }});
         con.run({query:"DROP TABLE matchstatuses"
             ,values:null,
             onSuccess:function(tx,r) {
-                alert('Table matchstatuses dropped.');
+                console.log('Table matchstatuses dropped.');
             },
             onError:function(tx,err) {
-                alert("Error in table matchstatuses drop!");
+                console.log("Error in table matchstatuses drop!");
             }});
     con.run({query:"CREATE TABLE IF NOT EXISTS eventTypes (id   INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name VARCHAR (20) UNIQUE NOT NULL);"
       ,values:null,
         onSuccess:function(tx,r) {
-            alert('Table EventTypes created.');
+            console.log('Table EventTypes created.');
         },
         onError:function(tx,err) {
-            alert("Error in table EventTypes creation!");
+            console.log("Error in table EventTypes creation!");
         }});
         con.run({query:"CREATE TABLE IF NOT EXISTS MatchStatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
             values:null,
             onSuccess:function(tx,r) {
-                alert('Table MatchStatuses created.');
+                console.log('Table MatchStatuses created.');
             },
             onError:function(tx,err) {
-                alert("Error in table MatchStatuses creation!");
+                console.log("Error in table MatchStatuses creation!");
             }});
     con.run({query:"CREATE TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));",
         values:null,
         onSuccess:function(tx,r) {
-            alert('Table Matches created.');
+            console.log('Table Matches created.');
         },
         onError:function(tx,err) {
-            alert("Error in table Matches creation!");
+            console.log("Error in table Matches creation!");
         }});
 
     con.run({query:"CREATE TABLE IF NOT EXISTS rounds (id INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, match_id  INTEGER REFERENCES matches (id), set_id INTEGER (1, 0) NOT NULL DEFAULT (0), round_id  INTEGER (4, 0) NOT NULL DEFAULT (0),hscore INTEGER (3, 0) NOT NULL DEFAULT (0),ascore INTEGER (3, 0) NOT NULL DEFAULT (0), eventtype INTEGER (2, 0) REFERENCES eventTypes (id), winside   INTEGER (1, 0) DEFAULT (0) NOT NULL );",
         values:null,
         onSuccess:function(tx,r) {
-            alert('Table Rounds created.');
+            console.log('Table Rounds created.');
         },
         onError:function(tx,err) {
-            alert("Error in table Rounds creation!");
+            console.log("Error in table Rounds creation!");
         }});
 
 
         con.run({query:"INSERT INTO MatchStatuses (id, Name) VALUES (0, 'Начат');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert matchstatuses 0 created.');
+                console.log('insert matchstatuses 0 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert matchstatuses 0 creation!");
+                console.log("Error in insert matchstatuses 0 creation!");
             }});
         con.run({query:"INSERT INTO MatchStatuses (id, name) VALUES (1, 'Завершен');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert matchstatuses  created.');
+                console.log('insert matchstatuses  created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert matchstatuses 1 creation!");
+                console.log("Error in insert matchstatuses 1 creation!");
             }});
 
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 0 created.');
+                console.log('insert Events 0 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 0 creation!");
+                console.log("Error in insert EventTypes 0 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (1, 'Эйс');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 1 created.');
+                console.log('insert Events 1 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 1 creation!");
+                console.log("Error in insert EventTypes 1 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (2, 'Неподача');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 2 created.');
+                console.log('insert Events 2 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 2 creation!");
+                console.log("Error in insert EventTypes 2 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (3, 'Блок');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 3 created.');
+                console.log('insert Events 3 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 3 creation!");
+                console.log("Error in insert EventTypes 3 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (4, 'Неатака');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 4 created.');
+                console.log('insert Events 4 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 4 creation!");
+                console.log("Error in insert EventTypes 4 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (5, 'Атака из 1 зоны');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 5 created.');
+                console.log('insert Events 5 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 5 creation!");
+                console.log("Error in insert EventTypes 5 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (6, 'Атака из 2 зоны');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 6  created.');
+                console.log('insert Events 6  created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 6 creation!");
+                console.log("Error in insert EventTypes 6 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (7, 'Первый темп');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 7 created.');
+                console.log('insert Events 7 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 7 creation!");
+                console.log("Error in insert EventTypes 7 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (8, 'Атака из 4 зоны');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 8 created.');
+                console.log('insert Events 8 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 8 creation!");
+                console.log("Error in insert EventTypes 8 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (9, 'Атака из 5 зоны');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 9 created.');
+                console.log('insert Events 9 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 9 creation!");
+                console.log("Error in insert EventTypes 9 creation!");
             }});
         con.run({query:"INSERT INTO eventTypes (id, name) VALUES (10, 'Пайп');",
             values:null,onSuccess:function(tx,r) {
-                alert('insert Events 10 created.');
+                console.log('insert Events 10 created.');
             },
             onError:function(tx,err) {
-                alert("Error in insert EventTypes 10 creation!");
+                console.log("Error in insert EventTypes 10 creation!");
             }});
 
 
@@ -269,19 +269,19 @@
         });
     }
 
-    function eventSummary(winside,eventtype,mid,elementname,isOverallStatistic=false)
+    function eventSummary(winside,eventtype,mid,elementname,isOverallStatistic)
     {
         var querySQL=null;
         var vals=null;
         if (isOverallStatistic===false)
         {
-            querySQL="SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype=?) AND (r.set_id=?);";
-            vals=[mid,winside,eventtype,$("#matchReportTabs").tabs("option", "active")];
+            querySQL="SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype BETWEEN ? AND ?) AND (r.set_id=?);";
+            vals=[mid,winside,eventtype[0],eventtype[1],$("#matchReportTabs").tabs("option", "active")-1];
         }
         if (isOverallStatistic===true)
         {
-            querySQL="SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype=?);";
-            vals=[mid,winside,eventtype]
+            querySQL="SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND (r.eventtype BETWEEN ? AND ?);";
+            vals=[mid,winside,eventtype[0],eventtype[1]];
         }
         con.run({
             query:querySQL,
@@ -299,57 +299,17 @@
                 console.log("match report error!");
             }
         });
-
-    }
-    function errorSummary(winside,eventtype,mid,elementname)
-    {
-        con.run({
-            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND ((r.eventtype=?) OR (r.eventtype=?));",
-            values:[mid,winside,eventtype[0],eventtype[1]],
-            onSuccess:function(tx,r) {
-                if (r.rows.length >= 1) {
-                    for (var i = 0; i < r.rows.length; i++) {
-                        var item = r.rows.item(i);
-                        console.log("res: "+item.res);
-                        $("#"+elementname).html(item.res);
-                    }
-                } else {console.log("empty matchreport");}
-            },
-            onError:function(tx,err) {
-                console.log("match report error!");
-            }
-        });
-
-    }
-    function attackSummary(winside,eventtype,mid,elementname)
-    {
-        con.run({
-            query:"SELECT r.id, COUNT(r.eventtype) as res FROM main.rounds r WHERE (r.match_id=?) AND (r.winside=?) AND ((r.eventtype BETWEEN ? AND ?));",
-            values:[mid,winside,eventtype[0],eventtype[1]],
-            onSuccess:function(tx,r) {
-                if (r.rows.length >= 1) {
-                    for (var i = 0; i < r.rows.length; i++) {
-                        var item = r.rows.item(i);
-                        console.log("res: "+item.res);
-                        $("#"+elementname).html(item.res);
-                    }
-                } else {console.log("empty matchreport");}
-            },
-            onError:function(tx,err) {
-                console.log("match report error!");
-            }
-        });
-
     }
     function drawMatchReport()
     {
         var vals='<div id="matchReportTabs" ><ul>';
-        for (var i=0;i<=game.currentSet;i++)
+        vals+='<li><a href="#matchReportTabs-0">ALL</a></li>';
+        for (var i=1;i<=game.currentSet+1;i++)
         {
-            vals+='<li><a href="#matchReportTabs-'+i+'">'+Number(i+1)+' Set</a></li>';
+            vals+='<li><a href="#matchReportTabs-'+i+'">'+Number(i)+' Set</a></li>';
         }
         vals+='</ul>';
-        for (var i=0;i<=game.currentSet;i++)
+        for (var i=0;i<=game.currentSet+1;i++)
         {
             vals+='<div id="matchReportTabs-'+i+'"></div>';
         }
@@ -359,49 +319,58 @@
         $( "#matchReportTabs" ).tabs({
             activate: function( event, ui )
             {
-                drawMatchReportSets();
+                var activeSet=$("#matchReportTabs").tabs("option", "active");
+                if (activeSet==0)
+                {
+                    drawMatchReportSets(true);
+                }
+                if (activeSet>0)
+                {
+                    drawMatchReportSets(false);
+                }
             }
         });
 
-        $("#matchReportTabs").tabs({active:game.currentSet});
+        $("#matchReportTabs").tabs({active:game.currentSet+1});
     }
-    function drawMatchReportSets()
+    function drawMatchReportSets(isOverallStatistic)
     {
-        eventSummary(1,1,game.id,"hAceCount");
-        eventSummary(2,1,game.id,"aAceCount");
 
-        eventSummary(1,2,game.id,"hBlkCount");
-        eventSummary(2,2,game.id,"aBlkCount");
+        eventSummary(1,[1,1],game.id,"hAceCount",isOverallStatistic);
+        eventSummary(2,[1,1],game.id,"aAceCount",isOverallStatistic);
 
-        errorSummary(1,[3,4],game.id,"hErrCount");
-        errorSummary(2,[3,4],game.id,"aErrCount");
+        eventSummary(1,[2,2],game.id,"hBlkCount",isOverallStatistic);
+        eventSummary(2,[2,2],game.id,"aBlkCount",isOverallStatistic);
 
-        eventSummary(1,3,game.id,"hErrAceCount");
-        eventSummary(2,3,game.id,"aErrAceCount");
+        eventSummary(1,[3,4],game.id,"hErrCount",isOverallStatistic);
+        eventSummary(2,[3,4],game.id,"aErrCount",isOverallStatistic);
 
-        eventSummary(1,4,game.id,"hErrAttCount");
-        eventSummary(2,4,game.id,"aErrAttCount");
+        eventSummary(1,[3,3],game.id,"hErrAceCount",isOverallStatistic);
+        eventSummary(2,[3,3],game.id,"aErrAceCount",isOverallStatistic);
 
-        attackSummary(1,[5,10],game.id,"hAttCount");
-        attackSummary(2,[5,10],game.id,"aAttCount");
+        eventSummary(1,[4,4],game.id,"hErrAttCount",isOverallStatistic);
+        eventSummary(2,[4,4],game.id,"aErrAttCount",isOverallStatistic);
 
-        eventSummary(1,5,game.id,"hAtt1Count");
-        eventSummary(2,5,game.id,"aAtt1Count");
+        eventSummary(1,[5,10],game.id,"hAttCount",isOverallStatistic);
+        eventSummary(2,[5,10],game.id,"aAttCount",isOverallStatistic);
 
-        eventSummary(1,6,game.id,"hAtt2Count");
-        eventSummary(2,6,game.id,"aAtt2Count");
+        eventSummary(1,[5,5],game.id,"hAtt1Count",isOverallStatistic);
+        eventSummary(2,[5,5],game.id,"aAtt1Count",isOverallStatistic);
 
-        eventSummary(1,7,game.id,"hAtt3Count");
-        eventSummary(2,7,game.id,"aAtt3Count");
+        eventSummary(1,[6,6],game.id,"hAtt2Count",isOverallStatistic);
+        eventSummary(2,[6,6],game.id,"aAtt2Count",isOverallStatistic);
 
-        eventSummary(1,8,game.id,"hAtt4Count");
-        eventSummary(2,8,game.id,"aAtt4Count");
+        eventSummary(1,[7,7],game.id,"hAtt3Count",isOverallStatistic);
+        eventSummary(2,[7,7],game.id,"aAtt3Count",isOverallStatistic);
 
-        eventSummary(1,9,game.id,"hAtt5Count");
-        eventSummary(2,9,game.id,"aAtt5Count");
+        eventSummary(1,[8,8],game.id,"hAtt4Count",isOverallStatistic);
+        eventSummary(2,[8,8],game.id,"aAtt4Count",isOverallStatistic);
 
-        eventSummary(1,10,game.id,"hAtt6Count");
-        eventSummary(2,10,game.id,"aAtt6Count");
+        eventSummary(1,[9,9],game.id,"hAtt5Count",isOverallStatistic);
+        eventSummary(2,[9,9],game.id,"aAtt5Count",isOverallStatistic);
+
+        eventSummary(1,[10,10],game.id,"hAtt6Count",isOverallStatistic);
+        eventSummary(2,[10,10],game.id,"aAtt6Count",isOverallStatistic);
 
         var tableReport='<table class="table table-bordered table-stripped" id="matchReportTable">';
         tableReport+='<tr><td id="hAceCount"></td><td>Aces</td><td id="aAceCount"></td></tr>';
