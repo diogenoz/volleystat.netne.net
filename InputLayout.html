@@ -497,10 +497,12 @@
                         game.lengthOfUsualSet=item.lengthOfUsualSet;
                         game.lengthOfLastSet=item.lengthOfLastSet;
                         game.matchdate=item.date;
+                        refreshScore();
                         if (game.status===0)
                         {
                             $( "#tabs" ).tabs("enable", "#tabs-2");
                             $( "#tabs" ).tabs( {active: 1} );
+
                         }
                         if(game.status===1)
                         {
