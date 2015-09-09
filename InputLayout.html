@@ -306,7 +306,7 @@
     {
 
         con.run({
-            query:"SELECT m.date,m.hteam,m.ateam,m.hset,m.aset,ms.name as statusname,m.id FROM matches m,matchstatuses ms WHERE ms.id=m.status ORDER BY m.date LIMIT 10;",
+            query:"SELECT m.date,m.hteam,m.ateam,m.hset,m.aset,ms.name as statusname,m.id FROM matches m,matchstatuses ms WHERE ms.id=m.status ORDER BY m.id DESC;",
             values:null,
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
@@ -314,7 +314,8 @@
                     vals += '<thead><td>Date</td><td>Score</td><td>Status</td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
-                        vals +="<tr ><td>"+item.date+"</td><td><a href='javascript:loadMatch("+item.id+");'>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</a></td><td>"+item.statusname+"</td></tr>";
+                        var item_date=new Date(item.date);
+                        vals +="<tr ><td>"+item_date.toLocaleDateString()+"</td><td><a href='javascript:loadMatch("+item.id+");'>"+item.hTeam+" "+item.hSet+" : "+item.aSet+" "+item.aTeam+"</a></td><td>"+item.statusname+"</td></tr>";
 
                     }
                     vals  += '</table>';
