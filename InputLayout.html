@@ -301,7 +301,7 @@
         $( "#matchLogTabs" ).tabs({
             activate: function( event, ui )
             {
-                var activeSet=$("#matchLogTabs").tabs("option", "active")-1;
+                var activeSet=$("#matchLogTabs").tabs("option", "active");
                 drawHeader(false,activeSet);
                 drawMatchLogRounds();
             }
