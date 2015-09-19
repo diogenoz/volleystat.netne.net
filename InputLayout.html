@@ -91,6 +91,36 @@
         dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (9, 'Атака из 5 зоны');"  ,"","Error in INSERT INTO EventTypes!");
         dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (10, 'Пайп');"            ,"","Error in INSERT INTO EventTypes!");
     }
+
+    function exportMatch()
+    {
+        con.run({
+            query:"SELECT * FROM matches m WHERE m.id=?;",
+            values:[game.id],
+            onSuccess:function(tx,r) {
+                var matchRow = r.rows.item(0);
+
+            },
+            onError:function(tx,err)
+            {
+                console.log("Error!");
+            }
+        });
+        con.run({
+            query:"SELECT * FROM rounds r WHERE r.match_id=?;",
+            values:[game.id],
+            onSuccess:function(tx,r) {
+                var tRows = r.rows.item(i);
+
+            },
+            onError:function(tx,err)
+            {
+                console.log("Error!");
+            }
+        });
+
+    }
+
     function drawHeader(isOverallStatistic,activeSet)
     {
 
