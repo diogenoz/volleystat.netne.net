@@ -45,210 +45,51 @@
             $(this).hide();
         });
     }
-    function initDB () {
-        con.run({query:"DROP TABLE eventtypes"
+    function dmlSqlQuery(sqlQuery,succesMessage,errorMessage)
+    {
+        con.run({query:sqlQuery
             ,values:null,
             onSuccess:function(tx,r) {
-                console.log('Table EventTypes dropped.');
+                console.log(succesMessage);
             },
             onError:function(tx,err) {
-                console.log("Error in table EventTypes drop!");
+                console.log(errorMessage);
             }});
-        con.run({query:"DROP TABLE matchstatuses"
-            ,values:null,
-            onSuccess:function(tx,r) {
-                console.log('Table matchstatuses dropped.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in table matchstatuses drop!");
-            }});
-        con.run({query:"CREATE TABLE IF NOT EXISTS eventTypes (id   INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name VARCHAR (20) UNIQUE NOT NULL);"
-      ,values:null,
-        onSuccess:function(tx,r) {
-            console.log('Table EventTypes created.');
-        },
-        onError:function(tx,err) {
-            console.log("Error in table EventTypes creation!");
-        }});
-        con.run({query:"CREATE INDEX i_eventtypes_name ON eventTypes (name);"
-            ,values:null,
-            onSuccess:function(tx,r) {
-                console.log('index EventTypes created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index EventTypes creation!");
-            }});
-        con.run({query:"CREATE TABLE IF NOT EXISTS MatchStatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('Table MatchStatuses created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in table MatchStatuses creation!");
-            }});
-        con.run({query:"CREATE INDEX i_matchstatuses_name ON MatchStatuses (Name);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('index MatchStatuses created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index MatchStatuses creation!");
-            }});
+    }
+    function initDB ()
+    {
+        dmlSqlQuery("DROP TABLE eventtypes","Table EventTypes dropped.","Table EventTypes dropped.");
+        dmlSqlQuery("DROP TABLE matchstatuses","Table matchstatuses dropped.","Error in table matchstatuses drop!");
 
-        con.run({query:"CREATE TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));",
-        values:null,
-        onSuccess:function(tx,r) {
-            console.log('Table Matches created.');
-        },
-        onError:function(tx,err) {
-            console.log("Error in table Matches creation!");
-        }});
+        dmlSqlQuery("CREATE TABLE IF NOT EXISTS eventTypes (id   INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name VARCHAR (20) UNIQUE NOT NULL);","Table EventTypes created.","Error in table EventTypes creation!");
+        dmlSqlQuery("CREATE INDEX i_eventtypes_name ON eventTypes (name);","index EventTypes created.","Error in index EventTypes creation!");
 
-        con.run({query:"CREATE INDEX i_matches_data ON matches (date);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('index Matches created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index Matches creation!");
-            }});
+        dmlSqlQuery("CREATE TABLE IF NOT EXISTS MatchStatuses (id INTEGER PRIMARY KEY UNIQUE NOT NULL, Name VARCHAR (30) UNIQUE NOT NULL);","Table MatchStatuses created.","Error in table  creation!");
+        dmlSqlQuery("CREATE INDEX i_matchstatuses_name ON MatchStatuses (Name);","Index MatchStatuses created.","Error in index MatchStatuses creation!");
 
-        con.run({query:"CREATE TABLE IF NOT EXISTS rounds (id INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, match_id  INTEGER REFERENCES matches (id), set_id INTEGER (1, 0) NOT NULL DEFAULT (0), round_id  INTEGER (4, 0) NOT NULL DEFAULT (0),hscore INTEGER (3, 0) NOT NULL DEFAULT (0),ascore INTEGER (3, 0) NOT NULL DEFAULT (0), eventtype INTEGER (2, 0) REFERENCES eventTypes (id), winside   INTEGER (1, 0) DEFAULT (0) NOT NULL );",
-        values:null,
-        onSuccess:function(tx,r) {
-            console.log('Table Rounds created.');
-        },
-        onError:function(tx,err) {
-            console.log("Error in table Rounds creation!");
-        }});
-        con.run({query:"CREATE INDEX i_rounds_eventtype ON rounds (eventtype);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('index round created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index round creation!");
-            }});
-        con.run({query:"CREATE INDEX i_rounds_match_id ON rounds (match_id);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('index round created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index round creation!");
-            }});
-        con.run({query:"CREATE INDEX i_rounds_set_id ON rounds (Set_id);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('index round created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index round creation!");
-            }});
-        con.run({query:"CREATE INDEX i_rounds_round_id ON rounds (round_id);",
-            values:null,
-            onSuccess:function(tx,r) {
-                console.log('index round created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in index round creation!");
-            }});
+        dmlSqlQuery("CREATE TABLE IF NOT EXISTS matches (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, hTeam VARCHAR (30) NOT NULL, aTeam VARCHAR (30) NOT NULL, date DATETIME, NumberOfSets INTEGER (1, 0) NOT NULL DEFAULT (3), LengthOfUsualSet INTEGER (3, 0) NOT NULL DEFAULT (25), LengthOfLastSet INTEGER (3, 0) DEFAULT (15) NOT NULL, hSet INTEGER NOT NULL DEFAULT (0), aSet INTEGER NOT NULL DEFAULT (0), currentSet INTEGER NOT NULL DEFAULT (0), currentRound INTEGER NOT NULL DEFAULT (0), status INTEGER NOT NULL DEFAULT (1));","Table Matches created.","Error in table Matches creation!");
+        dmlSqlQuery("CREATE INDEX i_matches_data ON matches (date);","INDEX i_matches_data created.","Error in INDEX i_matches_data creation!");
 
-        con.run({query:"INSERT INTO MatchStatuses (id, Name) VALUES (0, 'Начат');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert matchstatuses 0 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert matchstatuses 0 creation!");
-            }});
-        con.run({query:"INSERT INTO MatchStatuses (id, name) VALUES (1, 'Завершен');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert matchstatuses  created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert matchstatuses 1 creation!");
-            }});
+        dmlSqlQuery("CREATE TABLE IF NOT EXISTS rounds (id INTEGER  PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, match_id  INTEGER REFERENCES matches (id), set_id INTEGER (1, 0) NOT NULL DEFAULT (0), round_id  INTEGER (4, 0) NOT NULL DEFAULT (0),hscore INTEGER (3, 0) NOT NULL DEFAULT (0),ascore INTEGER (3, 0) NOT NULL DEFAULT (0), eventtype INTEGER (2, 0) REFERENCES eventTypes (id), winside   INTEGER (1, 0) DEFAULT (0) NOT NULL );","Table rounds created.","Error in table rounds creation!");
+        dmlSqlQuery("CREATE INDEX i_rounds_eventtype ON rounds (eventtype);"        ,"INDEX i_rounds_eventtype created.","Error in INDEX i_rounds_eventtype creation!");
+        dmlSqlQuery("CREATE INDEX i_rounds_match_id ON rounds (match_id);"          ,"INDEX i_rounds_match_id created.","Error in INDEX i_rounds_match_id creation!");
+        dmlSqlQuery("CREATE INDEX i_rounds_set_id ON rounds (Set_id);"              ,"INDEX i_rounds_set_id created.","Error in INDEX i_rounds_set_id creation!");
+        dmlSqlQuery("CREATE INDEX i_rounds_round_id ON rounds (round_id);"          ,"INDEX i_rounds_round_id created.","Error in INDEX i_rounds_round_id creation!");
 
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 0 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 0 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (1, 'Эйс');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 1 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 1 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (2, 'Неподача');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 2 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 2 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (3, 'Блок');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 3 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 3 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (4, 'Неатака');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 4 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 4 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (5, 'Атака из 1 зоны');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 5 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 5 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (6, 'Атака из 2 зоны');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 6  created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 6 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (7, 'Первый темп');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 7 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 7 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (8, 'Атака из 4 зоны');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 8 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 8 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (9, 'Атака из 5 зоны');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 9 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 9 creation!");
-            }});
-        con.run({query:"INSERT INTO eventTypes (id, name) VALUES (10, 'Пайп');",
-            values:null,onSuccess:function(tx,r) {
-                console.log('insert Events 10 created.');
-            },
-            onError:function(tx,err) {
-                console.log("Error in insert EventTypes 10 creation!");
-            }});
+        dmlSqlQuery("INSERT INTO MatchStatuses (id, Name) VALUES (0, 'Начат');"     ,"","Error in INSERT INTO MatchStatuses creation!");
+        dmlSqlQuery("INSERT INTO MatchStatuses (id, name) VALUES (1, 'Завершен');"  ,"","Error in INSERT INTO MatchStatuses creation!");
 
-
-
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (0, 'Спорный мяч');"      ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (1, 'Эйс');"              ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (2, 'Неподача');"         ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (3, 'Блок');"             ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (4, 'Неатака');"          ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (5, 'Атака из 1 зоны');"  ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (6, 'Атака из 2 зоны');"  ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (7, 'Первый темп');"      ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (8, 'Атака из 4 зоны');"  ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (9, 'Атака из 5 зоны');"  ,"","Error in INSERT INTO EventTypes!");
+        dmlSqlQuery("INSERT INTO eventTypes (id, name) VALUES (10, 'Пайп');"            ,"","Error in INSERT INTO EventTypes!");
     }
     function drawHeader(isOverallStatistic,activeSet)
     {
