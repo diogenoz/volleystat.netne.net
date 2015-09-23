@@ -93,6 +93,8 @@
     }
     function testAJAX()
     {
+        //testArr=['1','3','5'];
+        $.getJSON('http://volleystat.netne.net/addMatch.php',{"a":1,"b":2,"c":3,"d":4,"e":5},function(jsonData){alert(jsonData);})
 
     }
     function exportMatch()
@@ -347,18 +349,18 @@
         eventSummary(2,[10,10],game.id,"#aAtt6Count",isOverallStatistic,activeSet);
 
         var tableReport='<table class="table table-bordered table-stripped" id="matchReportTable">';
-        tableReport+='<tr><td id="hAceCount"></td><td>Aces</td><td id="aAceCount"></td></tr>';
-        tableReport+='<tr><td id="hBlkCount"></td><td>Blocks</td><td id="aBlkCount"></td></tr>';
-        tableReport+='<tr><td id="hErrCount"></td><td>Errors</td><td id="aErrCount"></td></tr>';
-        tableReport+='<tr><td id="hErrAceCount"></td><td>Ace Errors</td><td id="aErrAceCount"></td></tr>';
-        tableReport+='<tr><td id="hErrAttCount"></td><td>Attack Errors</td><td id="aErrAttCount"></td></tr>';
-        tableReport+='<tr><td id="hAttCount"></td><td>Attacks</td><td id="aAttCount"></td></tr>';
-        tableReport+='<tr><td id="hAtt1Count"></td><td>Attacks 1</td><td id="aAtt1Count"></td></tr>';
-        tableReport+='<tr><td id="hAtt2Count"></td><td>Attacks 2</td><td id="aAtt2Count"></td></tr>';
-        tableReport+='<tr><td id="hAtt3Count"></td><td>Attacks 3</td><td id="aAtt3Count"></td></tr>';
-        tableReport+='<tr><td id="hAtt4Count"></td><td>Attacks 4</td><td id="aAtt4Count"></td></tr>';
-        tableReport+='<tr><td id="hAtt5Count"></td><td>Attacks 5</td><td id="aAtt5Count"></td></tr>';
-        tableReport+='<tr><td id="hAtt6Count"></td><td>Attacks 6</td><td id="aAtt6Count"></td></tr>';
+        tableReport+='<tr><td id="hAceCount"></td><td>Эйсы</td><td id="aAceCount"></td></tr>';
+        tableReport+='<tr><td id="hBlkCount"></td><td>Блоки</td><td id="aBlkCount"></td></tr>';
+        tableReport+='<tr><td id="hErrCount"></td><td>Ошибки соперника</td><td id="aErrCount"></td></tr>';
+        tableReport+='<tr><td id="hErrAceCount"></td><td>Неподачи соперника</td><td id="aErrAceCount"></td></tr>';
+        tableReport+='<tr><td id="hErrAttCount"></td><td>Неатаки соперника</td><td id="aErrAttCount"></td></tr>';
+        tableReport+='<tr><td id="hAttCount"></td><td>Всего атак</td><td id="aAttCount"></td></tr>';
+        //tableReport+='<tr><td id="hAtt1Count"></td><td>Атака из </td><td id="aAtt1Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt2Count"></td><td>Атаки из 2-зоны</td><td id="aAtt2Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt3Count"></td><td>Атаки первого темпа</td><td id="aAtt3Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt4Count"></td><td>Атаки из 4-й зоны</td><td id="aAtt4Count"></td></tr>';
+        //tableReport+='<tr><td id="hAtt5Count"></td><td>Attacks 5</td><td id="aAtt5Count"></td></tr>';
+        tableReport+='<tr><td id="hAtt6Count"></td><td>Атаки пайп</td><td id="aAtt6Count"></td></tr>';
         tableReport+='</table>';
 
         $("#matchReportTable").html(tableReport);
@@ -688,6 +690,7 @@
         $( "#tabs" ).tabs();
         $( "#tabs" ).tabs("disable", "#tabs-2");
   });
+    $(".publish").click(function(){testAJAX()});
 
 
 
@@ -696,40 +699,40 @@
 
 <div id="tabs">
     <ul>
-        <li><a href="#tabs-1">Home</a></li>
-        <li><a href="#tabs-2">Score Table</a></li>
-        <li><a href="#tabs-3">Match log</a></li>
-        <li><a href="#tabs-4">Match Report</a></li>
+        <li><a href="#tabs-1">Начало</a></li>
+        <li><a href="#tabs-2">Ввод данных</a></li>
+        <li><a href="#tabs-3">Ход матча</a></li>
+        <li><a href="#tabs-4">Статистика матча</a></li>
 
     </ul>
     <div id="tabs-1">
         <form id="matchForm" action="#tabs-2">
 
             <div class="row">
-            <label for="hteam" class="col-md-4">hTeam</label>
+            <label for="hteam" class="col-md-4">Название команды 1</label>
             <input type="text" name="hteam" class="span12 col-md-4" placeholder="Enter HTeam" id="hTeam" required />
             </div>
 
             <div class="row">
-            <label for="ateam" class="col-md-4">aTeam</label>
+            <label for="ateam" class="col-md-4">Название команды 2</label>
             <input type="text" name="ateam" class="span12 col-md-4" placeholder="Enter ATeam" id="aTeam" required />
             </div>
 
             <div class="row">
-                <label for="numberOfSets" class="col-md-4">Number Of Sets</label>
+                <label for="numberOfSets" class="col-md-4">Количество сетов для победы</label>
                 <input type="number" name="numberOfSets" id="numberOfSets" class="span12 col-md-4" value="3" min="1" max="7" step="1" required />
             </div>
 
             <div class="row">
-                <label for="lengthOfUsualSet" class="col-md-4">Length of usual set</label>
+                <label for="lengthOfUsualSet" class="col-md-4">Длина обычного сета</label>
                 <input type="number" name="lengthOfUsualSet" id="lengthOfUsualSet" class="span12 col-md-4" value="25" min="1" max="50" step="1" required />
             </div>
 
             <div class="row">
-                <label for="lengthOfLastSet" class="col-md-4">Length of Last set</label>
+                <label for="lengthOfLastSet" class="col-md-4">Длина последнего сета</label>
                 <input type="number" name="lengthOfLastSet" id="lengthOfLastSet" class="span12 col-md-4" value="15" min="1" max="50" step="1" required />
             </div>
-            <input type="button" class="btn btn-success btn-large span12" id="start" name="start" value="START" />
+            <input type="button" class="btn btn-success btn-large span12" id="start" name="start" value="НАЧАТЬ!" />
     </form>
     <div id="previousMatches">
 
@@ -739,26 +742,26 @@
         <div class="row">
             <div class="btn btn-default col-md-11" id="HTeamLabel">Hteam</div>
             <div class="btn col-md-2"></div>
-            <div class="btn btn-default col-md-11" id="ATeamLabel">AwayTeam</div>
+            <div class="btn btn-default col-md-11" id="ATeamLabel">ATeam</div>
         </div>
         <div class="row">
             <div class="btn btn-default col-md-11" id="HSetLabel">0</div>
-            <div class="btn col-md-2">set</div>
+            <div class="btn col-md-2">Сеты</div>
             <div class="btn btn-default col-md-11" id="ASetLabel">0</div>
         </div>
         <div class="row">
-            <div class="btn btn-default col-md-6" id="HAceButton">HAce</div>
-            <div class="btn btn-default col-md-5" id="HErrAceButton">HErrAce</div>
+            <div class="btn btn-default col-md-6" id="HAceButton">Эйс</div>
+            <div class="btn btn-default col-md-5" id="HErrAceButton">Неподача соперника</div>
             <div class="btn  col-md-2"></div>
-            <div class="btn btn-default col-md-6" id="AAceButton">AAce</div>
-            <div class="btn btn-default col-md-5" id="AErrAceButton">AErrAce</div>
+            <div class="btn btn-default col-md-6" id="AAceButton">Эйс</div>
+            <div class="btn btn-default col-md-5" id="AErrAceButton">Неподача соперника</div>
         </div>
         <div class="row">
-            <div class="btn btn-default col-md-6" id="HBlkButton">HBlk</div>
-            <div class="btn btn-default col-md-5" id="HErrAttButton">HErrAtt</div>
+            <div class="btn btn-default col-md-6" id="HBlkButton">Блок</div>
+            <div class="btn btn-default col-md-5" id="HErrAttButton">Неатака соперника</div>
             <div class="btn  col-md-2"></div>
-            <div class="btn btn-default col-md-6" id="ABlkButton">ABlk</div>
-            <div class="btn btn-default col-md-5" id="AErrAttButton">AErrAtt</div>
+            <div class="btn btn-default col-md-6" id="ABlkButton">Блок</div>
+            <div class="btn btn-default col-md-5" id="AErrAttButton">Неатака соперника</div>
         </div>
         <div class="row">
             <div class="btn btn-default col-md-11" id="HScoreLabel">0</div>
@@ -787,10 +790,12 @@
     <div id="tabs-3">
         <div id="matchLog"></div>
         <div id="matchLogRounds"></div>
+        <div class="btn btn-default publish"></div>
     </div>
     <div id="tabs-4">
         <div id="matchReport"></div>
         <div id="matchReportTable"></div>
+        <div class="btn btn-default publish"></div>
     </div>
 
 </div>
