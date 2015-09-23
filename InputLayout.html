@@ -149,7 +149,7 @@
 
         matchHeader+='<div class="row">';
         matchHeader+=   '<div class="btn btn-default col-md-11 hMatchScore"></div>';
-        matchHeader+=   '<div class="btn col-md-2">Score</div>';
+        matchHeader+=   '<div class="btn col-md-2">Счет</div>';
         matchHeader+=   '<div class="btn btn-default col-md-11 aMatchScore"></div>';
         matchHeader+='</div>';
 
@@ -164,7 +164,7 @@
         vals+='<ul>';
         for (var i=0;i<=game.currentSet;i++)
         {
-            vals+='<li><a href="#matchLogTabs-'+i+'">'+Number(i+1)+' Set</a></li>';
+            vals+='<li><a href="#matchLogTabs-'+i+'">'+Number(i+1)+' Сет</a></li>';
         }
         vals+='</ul>';
         for (var i=0;i<=game.currentSet;i++)
@@ -193,7 +193,7 @@
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
                     var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
-                    vals  += '<thead><td>hEvent</td><td>hScore</td><td>aScore</td><td>aEvent</td></thead>';
+                    vals  += '<thead><td></td><td></td><td></td><td></td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
                         if (Number(item.winside)===1)
@@ -274,10 +274,10 @@
         var vals='<div id="matchReportTabs" >';
         vals+='<div class="matchHeader"></div>';
         vals+='<ul>';
-        vals+='<li><a href="#matchReportTabs-0">ALL</a></li>';
+        vals+='<li><a href="#matchReportTabs-0">Общая</a></li>';
         for (var i=1;i<=game.currentSet+1;i++)
         {
-            vals+='<li><a href="#matchReportTabs-'+i+'">'+Number(i)+' Set</a></li>';
+            vals+='<li><a href="#matchReportTabs-'+i+'">'+Number(i)+' Сет</a></li>';
         }
         vals+='</ul>';
         for (var i=0;i<=game.currentSet+1;i++)
@@ -347,7 +347,7 @@
 
         eventSummary(1,[10,10],game.id,"#hAtt6Count",isOverallStatistic,activeSet);
         eventSummary(2,[10,10],game.id,"#aAtt6Count",isOverallStatistic,activeSet);
-
+/*
         var tableReport='<table class="table table-bordered table-stripped" id="matchReportTable">';
         tableReport+='<tr><td id="hAceCount"></td><td>Эйсы</td><td id="aAceCount"></td></tr>';
         tableReport+='<tr><td id="hBlkCount"></td><td>Блоки</td><td id="aBlkCount"></td></tr>';
@@ -362,6 +362,7 @@
         //tableReport+='<tr><td id="hAtt5Count"></td><td>Attacks 5</td><td id="aAtt5Count"></td></tr>';
         tableReport+='<tr><td id="hAtt6Count"></td><td>Атаки пайп</td><td id="aAtt6Count"></td></tr>';
         tableReport+='</table>';
+*/
 
         $("#matchReportTable").html(tableReport);
 
@@ -794,7 +795,22 @@
     </div>
     <div id="tabs-4">
         <div id="matchReport"></div>
-        <div id="matchReportTable"></div>
+        <div id="matchReportTable">
+            <table class="table table-bordered table-stripped" id="matchReportTable">
+                <tr><td id="hAceCount"></td><td>Эйсы</td><td id="aAceCount"></td></tr>
+                <tr><td id="hBlkCount"></td><td>Блоки</td><td id="aBlkCount"></td></tr>
+                <tr><td id="hErrCount"></td><td>Ошибки соперника</td><td id="aErrCount"></td></tr>
+                <tr><td id="hErrAceCount"></td><td>Неподачи соперника</td><td id="aErrAceCount"></td></tr>
+                <tr><td id="hErrAttCount"></td><td>Неатаки соперника</td><td id="aErrAttCount"></td></tr>
+                <tr><td id="hAttCount"></td><td>Всего атак</td><td id="aAttCount"></td></tr>
+                <tr><td id="hAtt2Count"></td><td>Атаки из 2-зоны</td><td id="aAtt2Count"></td></tr>
+                <tr><td id="hAtt3Count"></td><td>Атаки первого темпа</td><td id="aAtt3Count"></td></tr>
+                <tr><td id="hAtt4Count"></td><td>Атаки из 4-й зоны</td><td id="aAtt4Count"></td></tr>
+                <tr><td id="hAtt5Count"></td><td>Attacks 5</td><td id="aAtt5Count"></td></tr>
+                <tr><td id="hAtt6Count"></td><td>Атаки пайп</td><td id="aAtt6Count"></td></tr>
+            </table>
+
+        </div>
         <div class="btn btn-default publish"></div>
     </div>
 
