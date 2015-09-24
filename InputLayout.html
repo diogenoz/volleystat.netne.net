@@ -192,7 +192,7 @@
             values:[game.id,$("#matchLogTabs").tabs("option", "active")],
             onSuccess:function(tx,r) {
                 if (r.rows.length >= 1) {
-                    var vals = '<table class="table table-bordered table-stripped" id="matchLogTable">';
+                    var vals = '<table class="table table-bordered table-stripped table-condensed" id="matchLogTable">';
                     vals  += '<thead><td></td><td></td><td></td><td></td></thead>';
                     for (var i = 0; i < r.rows.length; i++) {
                         var item = r.rows.item(i);
@@ -298,7 +298,7 @@
                     drawHeader(true,0);
                     drawMatchReportSets(true,activeSet);
                 }
-                if (activeSet>0)
+                if (activeSet>=0)
                 {
                     drawHeader(false,activeSet);
                     drawMatchReportSets(false,activeSet);
@@ -796,7 +796,7 @@
     <div id="tabs-4">
         <div id="matchReport"></div>
         <div id="matchReportTable">
-            <table class="table table-bordered table-stripped" id="matchReportTable">
+            <table class="table table-bordered table-stripped table-responsive table-condensed" id="matchReportTable">
                 <tr><td id="hAceCount"></td><td>Эйсы</td><td id="aAceCount"></td></tr>
                 <tr><td id="hBlkCount"></td><td>Блоки</td><td id="aBlkCount"></td></tr>
                 <tr><td id="hErrCount"></td><td>Ошибки соперника</td><td id="aErrCount"></td></tr>
@@ -806,7 +806,6 @@
                 <tr><td id="hAtt2Count"></td><td>Атаки из 2-зоны</td><td id="aAtt2Count"></td></tr>
                 <tr><td id="hAtt3Count"></td><td>Атаки первого темпа</td><td id="aAtt3Count"></td></tr>
                 <tr><td id="hAtt4Count"></td><td>Атаки из 4-й зоны</td><td id="aAtt4Count"></td></tr>
-                <tr><td id="hAtt5Count"></td><td>Attacks 5</td><td id="aAtt5Count"></td></tr>
                 <tr><td id="hAtt6Count"></td><td>Атаки пайп</td><td id="aAtt6Count"></td></tr>
             </table>
 
